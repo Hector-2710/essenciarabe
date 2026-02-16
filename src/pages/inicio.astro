@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/mainlayout.astro";
-import Navbar from "../components/navbar.astro";
+import Navbar from "../components/Navbar.astro";
+import TrustSignals from "../components/TrustSignals.astro";
 import PerfumeCard from "../components/PerfumeCard.astro";
 import { getCollection } from "astro:content";
 
@@ -44,4 +45,5 @@ const perfumes = await getCollection("perfumes");
             </div>
         </section>
     </main>
+    <TrustSignals />
 </Layout>
