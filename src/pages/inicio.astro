@@ -25,6 +25,8 @@ const perfumes = await getCollection("perfumes");
                         price={perfume.data.price}
                         image={perfume.data.image}
                         description={perfume.data.description}
+                        available={perfume.data.available}
+                        stock={perfume.data.stock}
                     />
                 ))
             }

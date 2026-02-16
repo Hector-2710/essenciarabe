@@ -1,5 +1,5 @@
 ---
-const { name, brand, price, image, description } = Astro.props;
+const { name, brand, price, image, description, available, stock } = Astro.props;
 ---
 
 <div
@@ -26,7 +26,13 @@ const { name, brand, price, image, description } = Astro.props;
         </p>
 
         <div class="mt-auto flex items-center justify-between">
-            <span class="text-lg font-bold text-white">${price}</span>
+            {
+                available && stock > 0 ? (
+                    <span class="text-lg font-bold text-white">${price}</span>
+                ) : (
+                    <span class="text-lg font-bold text-red-500">Agotado</span>
+                )
+            }
             <button
                 class="cursor-pointer rounded border border-[#d4af37] bg-transparent px-4 py-2 text-xs text-[#d4af37] transition-all duration-300 ease-in-out hover:bg-[#d4af37] hover:text-black"
             >
