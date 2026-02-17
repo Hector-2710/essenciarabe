@@ -5,6 +5,7 @@ const perfumes = defineCollection({
         name: z.string(),
         brand: z.string(),
         price: z.number(),
+        type: z.string(),
         image: z.string(),
         description: z.string().optional(),
         available: z.boolean().default(true),
