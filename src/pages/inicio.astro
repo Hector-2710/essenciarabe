@@ -1,5 +1,5 @@
 ---
-import Layout from "../layouts/mainlayout.astro";
+import Layout from "../layouts/MainLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import PerfumeCard from "../components/PerfumeCard.astro";
 import { getCollection } from "astro:content";
@@ -20,7 +20,8 @@ const perfumes = await getCollection("perfumes");
             <p
                 class="text-xl md:text-2xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-normal"
             >
-                Una colección seleccionada especificamente con los mejores perfumes arabes del mercado
+                Una colección seleccionada especificamente con los mejores
+                perfumes arabes del mercado
             </p>
         </section>
 
