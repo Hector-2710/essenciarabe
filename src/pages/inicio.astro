@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/mainlayout.astro";
+import Navbar from "../components/Navbar.astro";
+import PerfumeCard from "../components/PerfumeCard.astro";
+import { getCollection } from "astro:content";
+
+const perfumes = await getCollection("perfumes");
+---
+
+<Layout title="Inicio | Essenciarabe">
+    <Navbar />
+
+    <main class="min-h-screen bg-[#f5f5f7]">
+        <section class="max-w-7xl mx-auto px-6 py-24 text-center">
+            <h1
+                class="text-5xl md:text-7xl font-semibold tracking-tight text-[#1d1d1f] mb-6"
+            >
+                Descubre la Esenciarabe
+            </h1>
+            <p
+                class="text-xl md:text-2xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-normal"
+            >
+                Una colección seleccionada especificamente con los mejores perfumes arabes del mercado
+            </p>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 pb-24">
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            >
+                {
+                    perfumes.map((perfume) => (
+                        <PerfumeCard
+                            name={perfume.data.name}
+                            brand={perfume.data.brand}
+                            price={perfume.data.price}
+                            image={perfume.data.image}
+                            description={perfume.data.description}
+                            available={perfume.data.available}
+                            stock={perfume.data.stock}
+                        />
+                    ))
+                }
+            </div>
+        </section>
+    </main>
+</Layout>

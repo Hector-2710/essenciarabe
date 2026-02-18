@@ -1,0 +1,49 @@
+---
+import "../styles/global.css";
+---
+
+<nav
+    class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200"
+>
+    <div class="max-w-7xl mx-auto px-6 h-11 flex items-center">
+        <!-- Logo -->
+        <div class="flex-1 flex justify-start">
+            <a
+                href="/inicio"
+                class="text-lg font-semibold tracking-tight hover:opacity-80 transition-opacity whitespace-nowrap"
+            >
+                Essenciarabe
+            </a>
+        </div>
+
+        <!-- Centered Links -->
+        <div class="hidden md:flex items-center gap-8">
+            <a class="nav-link" href="/inicio">Inicio</a>
+            <a class="nav-link" href="/perfumes">Perfumes</a>
+            <a class="nav-link" href="/decants">Decants</a>
+            <a class="nav-link" href="/contacto">Contacto</a>
+            <a class="nav-link" href="/nosotros">Nosotros</a>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex-1 flex justify-end">
+            <div id="nav-actions" class="flex items-center gap-3">
+                <button
+                    id="cart-btn"
+                    class="relative hover:opacity-70 transition-opacity ml-2"
+                >
+                    <span class="text-xl">🛒</span>
+                    <span
+                        id="cart-count"
+                        class="absolute -top-1 -right-1 bg-apple-blue text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold"
+                    >
+                        0
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Spacer to prevent content from going under the fixed navbar -->
+<div class="h-11"></div>

@@ -1,0 +1,12 @@
+services:
+  essenciarabe:
+    container_name: essenciarabe
+    build: .
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/app
+      - /app/node_modules # Reduce host vs container dependency conflicts
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Ensures hot reload works reliably in Docker
+    restart: unless-stopped

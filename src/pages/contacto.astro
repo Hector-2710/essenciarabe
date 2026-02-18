@@ -1,0 +1,110 @@
+---
+import Layout from "../layouts/mainlayout.astro";
+import Navbar from "../components/Navbar.astro";
+---
+
+<Layout title="Contacto | Essenciarabe">
+    <Navbar />
+
+    <main class="min-h-screen bg-[#f5f5f7]">
+        <!-- Hero Section -->
+        <section class="max-w-4xl mx-auto px-6 pt-24 pb-12 text-center">
+            <h1 class="text-4xl md:text-6xl font-semibold text-[#1d1d1f] mb-6">
+                Conecta con Nosotros
+            </h1>
+            <p class="text-xl text-gray-500 max-w-2xl mx-auto font-light">
+                Estamos aquí para asesorarte. Elige tu forma preferida de
+                contacto y descubramos juntos tu próxima fragancia favorita.
+            </p>
+        </section>
+
+        <!-- Contact Methods Grid -->
+        <section class="max-w-5xl mx-auto px-6 pb-24">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <!-- Instagram Card -->
+                <a
+                    href="https://instagram.com/essenciarabe"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                    <div
+                        class="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300"
+                    >
+                        📸
+                    </div>
+                    <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-2">
+                        Instagram
+                    </h3>
+                    <p class="text-gray-500 mb-6 font-light">
+                        Síguenos para novedades, reseñas y contenido exclusivo.
+                    </p>
+                    <span
+                        class="text-blue-600 font-medium group-hover:underline"
+                        >@essenciarabe &rarr;</span
+                    >
+                </a>
+
+                <!-- WhatsApp Card -->
+                <a
+                    href="https://wa.me/5211234567890"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                    <div
+                        class="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300"
+                    >
+                        💬
+                    </div>
+                    <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-2">
+                        WhatsApp
+                    </h3>
+                    <p class="text-gray-500 mb-6 font-light">
+                        Atención personalizada y respuestas rápidas a tus dudas.
+                    </p>
+                    <span
+                        class="text-green-600 font-medium group-hover:underline"
+                        >Enviar mensaje &rarr;</span
+                    >
+                </a>
+
+                <!-- Email Card -->
+                <a
+                    href="mailto:hola@essenciarabe.com"
+                    class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                    <div
+                        class="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300"
+                    >
+                        ✉️
+                    </div>
+                    <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-2">
+                        Email
+                    </h3>
+                    <p class="text-gray-500 mb-6 font-light">
+                        Para consultas detalladas, colaboraciones o pedidos
+                        especiales.
+                    </p>
+                    <span
+                        class="text-gray-800 font-medium group-hover:underline"
+                        >hola@essenciarabe.com &rarr;</span
+                    >
+                </a>
+            </div>
+        </section>
+
+        <!-- FAQ Teaser or Additional Info -->
+        <section class="max-w-2xl mx-auto px-6 pb-24 text-center">
+            <h4
+                class="text-lg font-medium text-gray-400 uppercase tracking-widest mb-4"
+            >
+                Horario de Atención
+            </h4>
+            <p class="text-xl text-[#1d1d1f]">
+                Lunes a Viernes<br />
+                10:00 AM - 8:00 PM
+            </p>
+        </section>
+    </main>
+</Layout>
