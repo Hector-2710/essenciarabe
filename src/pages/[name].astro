@@ -104,8 +104,14 @@ const { name, brand, price, image, description, available, stock, type } = data;
 
                     <div class="mb-12">
                         <button
+                            id="add-to-cart-btn"
                             class="w-full p-5 rounded-2xl border-none bg-[#0071e3] text-white text-[1.1rem] font-semibold cursor-pointer transition-all duration-300 hover:bg-[#0077ed] hover:-translate-y-0.5 disabled:bg-[#86868b] disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={!available}
+                            data-id={name}
+                            data-name={name}
+                            data-brand={brand}
+                            data-price={price}
+                            data-image={image}
                         >
                             {available ? "Agregar al carrito" : "Próximamente"}
                         </button>
@@ -129,3 +135,20 @@ const { name, brand, price, image, description, available, stock, type } = data;
         </section>
     </main>
 </Layout>
+
+<script>
+    import { addToCart } from "../store/cartStore";
+
+    const addToCartBtn = document.getElementById("add-to-cart-btn");
+
+    addToCartBtn?.addEventListener("click", () => {
+        const dataset = (addToCartBtn as HTMLButtonElement).dataset;
+        addToCart({
+            id: dataset.id || "",
+            name: dataset.name || "",
+            brand: dataset.brand || "",
+            price: Number(dataset.price) || 0,
+            image: dataset.image || "",
+        });
+    });
+</script>
