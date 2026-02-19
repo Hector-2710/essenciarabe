@@ -1,11 +1,12 @@
 ---
+import Cart from "./Cart.astro";
 import "../styles/global.css";
 ---
 
 <nav
     class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200"
 >
-    <div class="max-w-7xl mx-auto px-6 h-11 flex items-center">
+    <div class="max-w-7xl mx-auto px-6 h-11 flex items-center justify-between">
         <!-- Logo -->
         <div class="flex-1 flex justify-start">
             <a
@@ -16,7 +17,7 @@ import "../styles/global.css";
             </a>
         </div>
 
-        <!-- Centered Links -->
+        <!-- Centered Links (Desktop) -->
         <div class="hidden md:flex items-center gap-8">
             <a class="nav-link" href="/inicio">Inicio</a>
             <a class="nav-link" href="/perfumes">Perfumes</a>
@@ -35,15 +36,183 @@ import "../styles/global.css";
                     <span class="text-xl">🛒</span>
                     <span
                         id="cart-count"
-                        class="absolute -top-1 -right-1 bg-apple-blue text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold"
+                        class="absolute -top-1 -right-1 bg-apple-blue text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold hidden"
                     >
                         0
                     </span>
                 </button>
+
+                <!-- Mobile Menu Button (Hamburger) - Moved to Right -->
+                <button
+                    id="mobile-menu-btn"
+                    class="flex md:hidden p-1 text-gray-600 hover:text-gray-900 focus:outline-none transition-colors z-[100]"
+                    aria-label="Toggle menu"
+                >
+                    <svg
+                        id="menu-icon"
+                        class="w-6 h-6 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                    <svg
+                        id="close-icon"
+                        class="hidden w-6 h-6 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
         </div>
+    </div>
+
+    <!-- Mobile Menu Drawer (Apple-style Full-screen White) -->
+    <div
+        id="mobile-menu"
+        class="fixed inset-0 h-screen w-screen bg-white z-[90] hidden md:hidden flex flex-col pt-24 px-10 transition-all duration-300 ease-in-out opacity-0 pointer-events-none"
+    >
+        <ul class="flex flex-col gap-8">
+            <li
+                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[100ms]"
+            >
+                <a class="mobile-nav-link text-3xl font-semibold" href="/inicio"
+                    >Inicio</a
+                >
+            </li>
+            <li
+                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[150ms]"
+            >
+                <a
+                    class="mobile-nav-link text-3xl font-semibold"
+                    href="/perfumes">Perfumes</a
+                >
+            </li>
+            <li
+                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[200ms]"
+            >
+                <a
+                    class="mobile-nav-link text-3xl font-semibold"
+                    href="/decants">Decants</a
+                >
+            </li>
+            <li
+                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[250ms]"
+            >
+                <a
+                    class="mobile-nav-link text-3xl font-semibold"
+                    href="/contacto">Contacto</a
+                >
+            </li>
+            <li
+                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[300ms]"
+            >
+                <a
+                    class="mobile-nav-link text-3xl font-semibold"
+                    href="/nosotros">Nosotros</a
+                >
+            </li>
+        </ul>
     </div>
 </nav>
 
 <!-- Spacer to prevent content from going under the fixed navbar -->
 <div class="h-11"></div>
+
+<Cart />
+
+<script>
+    import type { CartItem } from "../store/cartStore";
+    import { cartItems, toggleCart } from "../store/cartStore";
+
+    const btn = document.querySelector("#cart-btn");
+    const countEl = document.querySelector("#cart-count");
+    const mobileMenuBtn = document.querySelector("#mobile-menu-btn");
+    const mobileMenu = document.querySelector("#mobile-menu");
+    const menuIcon = document.querySelector("#menu-icon");
+    const closeIcon = document.querySelector("#close-icon");
+    const mobileItems = document.querySelectorAll(".mobile-li");
+
+    function closeMenu() {
+        mobileMenu?.classList.add("opacity-0", "pointer-events-none");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+            mobileMenu?.classList.add("hidden");
+            mobileItems.forEach((item) => {
+                item.classList.add("translate-y-4", "opacity-0");
+            });
+        }, 300);
+        menuIcon?.classList.remove("hidden");
+        closeIcon?.classList.add("hidden");
+    }
+
+    function openMenu() {
+        mobileMenu?.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        setTimeout(() => {
+            mobileMenu?.classList.remove("opacity-0", "pointer-events-none");
+            mobileItems.forEach((item) => {
+                item.classList.remove("translate-y-4", "opacity-0");
+            });
+        }, 10);
+        menuIcon?.classList.add("hidden");
+        closeIcon?.classList.remove("hidden");
+    }
+
+    // Cart toggle
+    btn?.addEventListener("click", () => {
+        toggleCart();
+        // Close mobile menu if cart is opened
+        if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+            closeMenu();
+        }
+    });
+
+    // Mobile menu toggle
+    mobileMenuBtn?.addEventListener("click", () => {
+        const isOpen =
+            !mobileMenu?.classList.contains("hidden") &&
+            !mobileMenu?.classList.contains("opacity-0");
+
+        if (isOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    // Close menu when clicking a link
+    mobileItems.forEach((item) => {
+        item.addEventListener("click", () => {
+            closeMenu();
+        });
+    });
+
+    cartItems.subscribe((items: Record<string, CartItem>) => {
+        const totalItems = Object.values(items).reduce(
+            (acc: number, item: CartItem) => acc + item.quantity,
+            0,
+        );
+        if (countEl) {
+            countEl.textContent = totalItems.toString();
+            // Only show badge if there are items
+            if (totalItems > 0) {
+                countEl.classList.remove("hidden");
+            } else {
+                countEl.classList.add("hidden");
+            }
+        }
+    });
+</script>

@@ -54,12 +54,44 @@ const { name, brand, price, image, description, available, stock } =
                     )
                 }
             </div>
-            <a
-                class="rounded-full bg-black px-4 py-1.5 text-xs font-medium text-white transition-transform duration-300 hover:bg-gray-800 hover:scale-105 active:scale-95"
-                href={`/${name}`}
-            >
-                Ver más
-            </a>
+            <div class="flex gap-2">
+                <a
+                    class="rounded-full bg-gray-100 px-4 py-1.5 text-xs font-medium text-gray-900 transition-all duration-300 hover:bg-gray-200 active:scale-95"
+                    href={`/${name}`}
+                >
+                    Detalles
+                </a>
+                <button
+                    class="add-to-cart-btn flex-1 rounded-full bg-black px-4 py-1.5 text-xs font-medium text-white transition-all duration-300 hover:bg-gray-800 hover:shadow-lg active:scale-95 cursor-pointer"
+                    data-id={name}
+                    data-name={name}
+                    data-price={price}
+                    data-image={image}
+                    data-brand={brand}
+                    disabled={!available || stock <= 0}
+                >
+                    {available && stock > 0 ? "Añadir" : "Agotado"}
+                </button>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    import { addToCart } from "../store/cartStore";
+
+    const buttons = document.querySelectorAll(".add-to-cart-btn");
+    buttons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const btn = e.currentTarget as HTMLButtonElement;
+            const product = {
+                id: btn.dataset.id!,
+                name: btn.dataset.name!,
+                price: parseFloat(btn.dataset.price!),
+                image: btn.dataset.image!,
+                brand: btn.dataset.brand,
+            };
+            addToCart(product);
+        });
+    });
+</script>
