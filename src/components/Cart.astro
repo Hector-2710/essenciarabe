@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <div
@@ -76,9 +77,10 @@
             <p id="cart-subtotal" class="text-xl font-semibold">$0</p>
         </div>
         <button
-            class="w-full bg-black text-white py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform active:scale-[0.98]"
+            id="checkout-btn"
+            class="w-full bg-green-500 text-white py-4 rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 transform active:scale-[0.98]"
         >
-            Check Out
+            Comprar por whatsapp
         </button>
     </div>
 </aside>
@@ -100,6 +102,33 @@
     const emptyMessage = document.getElementById("empty-cart-message");
     const subtotalEl = document.getElementById("cart-subtotal");
     const footer = document.getElementById("cart-footer");
+    const checkoutBtn = document.getElementById("checkout-btn");
+
+    const PHONE_NUMBER = "56965390562";
+
+    function handleCheckout() {
+        const items = Object.values(cartItems.get());
+        if (items.length === 0) return;
+
+        let total = 0;
+        let message = "¡Hola! Me gustaría realizar el siguiente pedido:\n\n";
+
+        items.forEach((item) => {
+            message += `- ${item.name} (${item.brand}) x${item.quantity}: $${(
+                item.price * item.quantity
+            ).toLocaleString("es-CL")}\n`;
+            total += item.price * item.quantity;
+        });
+
+        message += `\n*TOTAL: $${total.toLocaleString("es-CL")}*`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`;
+
+        window.open(whatsappUrl, "_blank");
+    }
+
+    checkoutBtn?.addEventListener("click", handleCheckout);
 
     // Sync Drawer visibility
     isCartOpen.subscribe((open) => {
