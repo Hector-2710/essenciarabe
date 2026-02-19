@@ -1,4 +1,5 @@
 ---
+import Cart from "./Cart.astro";
 import "../styles/global.css";
 ---
 
@@ -47,3 +48,33 @@ import "../styles/global.css";
 
 <!-- Spacer to prevent content from going under the fixed navbar -->
 <div class="h-11"></div>
+
+<Cart />
+
+<script>
+    import type { CartItem } from "../store/cartStore";
+    import { cartItems, toggleCart } from "../store/cartStore";
+
+    const btn = document.querySelector("#cart-btn");
+    const countEl = document.querySelector("#cart-count");
+
+    btn?.addEventListener("click", () => {
+        toggleCart();
+    });
+
+    cartItems.subscribe((items: Record<string, CartItem>) => {
+        const totalItems = Object.values(items).reduce(
+            (acc: number, item: CartItem) => acc + item.quantity,
+            0,
+        );
+        if (countEl) {
+            countEl.textContent = totalItems.toString();
+            // Only show badge if there are items
+            if (totalItems > 0) {
+                countEl.classList.remove("hidden");
+            } else {
+                countEl.classList.add("hidden");
+            }
+        }
+    });
+</script>
