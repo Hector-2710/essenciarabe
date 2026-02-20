@@ -5,7 +5,6 @@ const perfumes = defineCollection({
         name: z.string(),
         brand: z.string(),
         price: z.number(),
-        type: z.string(),
         image: z.string(),
         description: z.string().optional(),
         available: z.boolean().default(true),
@@ -13,4 +12,17 @@ const perfumes = defineCollection({
     }),
 });
 
-export const collections = {perfumes};
+const decants = defineCollection({
+    schema: z.object({
+        name: z.string(),
+        brand: z.string(),
+        price: z.number(),
+        image: z.string(),
+        description: z.string().optional(),
+        available: z.boolean().default(true),
+        stock: z.number().default(0),
+    }),
+});
+
+export const collections = { perfumes, decants };
+
