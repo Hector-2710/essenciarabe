@@ -5,14 +5,23 @@ import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
     const perfumes = await getCollection("perfumes");
-    return perfumes.map((perfume) => ({
+    const decants = await getCollection("decants");
+
+    const perfumePaths = perfumes.map((perfume) => ({
         params: { name: perfume.data.name },
-        props: { data: perfume.data },
+        props: { data: perfume.data, category: "Perfume" },
     }));
+
+    const decantPaths = decants.map((decant) => ({
+        params: { name: decant.data.name },
+        props: { data: decant.data, category: "Decant" },
+    }));
+
+    return [...perfumePaths, ...decantPaths];
 }
 
-const { data } = Astro.props;
-const { name, brand, price, image, description, available, stock, type } = data;
+const { data, category } = Astro.props;
+const { name, brand, price, image, description, available, stock } = data;
 ---
 
 <Layout title={`${name} | Essenciarabe`}>
@@ -71,7 +80,9 @@ const { name, brand, price, image, description, available, stock, type } = data;
                         >
                             {name}
                         </h1>
-                        <p class="text-[1.2rem] text-[#86868b] mt-2">{type}</p>
+                        <p class="text-[1.2rem] text-[#86868b] mt-2">
+                            {category}
+                        </p>
                     </div>
 
                     <div class="flex items-center gap-6 mb-8">
