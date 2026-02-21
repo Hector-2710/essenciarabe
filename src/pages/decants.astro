@@ -4,9 +4,7 @@ import Navbar from "../components/Navbar.astro";
 import PerfumeCard from "../components/PerfumeCard.astro";
 
 import { getCollection } from "astro:content";
-const perfumes = await getCollection("perfumes", ({ data }) => {
-    return data.type === "decant";
-});
+const perfumes = await getCollection("decants");
 ---
 
 <Layout title="Decants | Essenciarabe">

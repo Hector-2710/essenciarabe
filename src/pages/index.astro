@@ -4,7 +4,9 @@ import Navbar from "../components/Navbar.astro";
 import PerfumeCard from "../components/PerfumeCard.astro";
 import { getCollection } from "astro:content";
 
-const perfumes = await getCollection("perfumes");
+const perfumesList = await getCollection("perfumes");
+const decantsList = await getCollection("decants");
+const perfumes = [...perfumesList, ...decantsList];
 ---
 
 <Layout title="Inicio | Essenciarabe">

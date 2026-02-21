@@ -5,14 +5,23 @@ import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
     const perfumes = await getCollection("perfumes");
-    return perfumes.map((perfume) => ({
+    const decants = await getCollection("decants");
+
+    const perfumePaths = perfumes.map((perfume) => ({
         params: { name: perfume.data.name },
-        props: { data: perfume.data },
+        props: { data: perfume.data, category: "Perfume" },
     }));
+
+    const decantPaths = decants.map((decant) => ({
+        params: { name: decant.data.name },
+        props: { data: decant.data, category: "Decant" },
+    }));
+
+    return [...perfumePaths, ...decantPaths];
 }
 
-const { data } = Astro.props;
-const { name, brand, price, image, description, available, stock, type } = data;
+const { data, category } = Astro.props;
+const { name, brand, price, image, description, available, stock } = data;
 ---
 
 <Layout title={`${name} | Essenciarabe`}>
@@ -23,7 +32,7 @@ const { name, brand, price, image, description, available, stock, type } = data;
             <!-- Back Button -->
             <div class="mb-8">
                 <a
-                    href="/inicio"
+                    href="/"
                     class="inline-flex items-center gap-2 px-6 py-2.5 bg-white rounded-full text-black font-semibold shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-[#e5e5e7] hover:bg-[#f5f5f7] hover:shadow-[0_4px_15px_rgba(0,0,0,0.1)] transition-all duration-300 group"
                 >
                     <svg
@@ -71,7 +80,9 @@ const { name, brand, price, image, description, available, stock, type } = data;
                         >
                             {name}
                         </h1>
-                        <p class="text-[1.2rem] text-[#86868b] mt-2">{type}</p>
+                        <p class="text-[1.2rem] text-[#86868b] mt-2">
+                            {category}
+                        </p>
                     </div>
 
                     <div class="flex items-center gap-6 mb-8">
@@ -104,8 +115,14 @@ const { name, brand, price, image, description, available, stock, type } = data;
 
                     <div class="mb-12">
                         <button
+                            id="add-to-cart-btn"
                             class="w-full p-5 rounded-2xl border-none bg-[#0071e3] text-white text-[1.1rem] font-semibold cursor-pointer transition-all duration-300 hover:bg-[#0077ed] hover:-translate-y-0.5 disabled:bg-[#86868b] disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={!available}
+                            data-id={name}
+                            data-name={name}
+                            data-brand={brand}
+                            data-price={price}
+                            data-image={image}
                         >
                             {available ? "Agregar al carrito" : "Próximamente"}
                         </button>
@@ -129,3 +146,20 @@ const { name, brand, price, image, description, available, stock, type } = data;
         </section>
     </main>
 </Layout>
+
+<script>
+    import { addToCart } from "../store/cartStore";
+
+    const addToCartBtn = document.getElementById("add-to-cart-btn");
+
+    addToCartBtn?.addEventListener("click", () => {
+        const dataset = (addToCartBtn as HTMLButtonElement).dataset;
+        addToCart({
+            id: dataset.id || "",
+            name: dataset.name || "",
+            brand: dataset.brand || "",
+            price: Number(dataset.price) || 0,
+            image: dataset.image || "",
+        });
+    });
+</script>
