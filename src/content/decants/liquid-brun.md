@@ -1,9 +1,9 @@
 ---
 name: "Liquid Brun"
 brand: "French Avenue"
-price: 29990
+price: 3990
 image: "/images/liquid-brun.jpg"
-description: "Una fragancia dulce y especiada con notas de vainilla, pimienta negra y sándalo."
+description: "Una fragancia lujosa y especiada con notas de vainilla, praliné y canela, inspirada en Althair de Parfums de Marly."
 available: true
 stock: 10
 ---

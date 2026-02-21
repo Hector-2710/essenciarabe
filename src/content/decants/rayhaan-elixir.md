@@ -1,9 +1,9 @@
 ---
 name: "Rayhaan Elixir"
 brand: "Rayhaan"
-price: 29990
+price: 3990
 image: "/images/rayhaan-elixir.jpg"
-description: "Una fragancia dulce inspirada en Jean Paul Gaultier La Male Elixir"
+description: "Una reinterpretación intensamente dulce y adictiva con notas de lavanda, haba tonka y benjuí, inspirada en Le Male Elixir de JPG."
 available: true
 stock: 10
 ---

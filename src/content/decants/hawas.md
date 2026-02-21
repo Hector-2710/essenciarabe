@@ -1,7 +1,7 @@
 ---
 name: "Hawas"
 brand: "Rasasi"
-price: 45990
+price: 3700
 image: "/images/hawas.jpg"
 description: "Una fragancia refrescante y acuática con notas de canela, bergamota y melón, perfecta para climas cálidos."
 available: true
