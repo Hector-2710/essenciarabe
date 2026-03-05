@@ -77,22 +77,3 @@ const { id, name, brand, price, image, description, available, stock } =
         </div>
     </div>
 </div>
-
-<script>
-    import { addToCart } from "../store/cartStore";
-
-    const buttons = document.querySelectorAll(".add-to-cart-btn");
-    buttons.forEach((button) => {
-        button.addEventListener("click", (e) => {
-            const btn = e.currentTarget as HTMLButtonElement;
-            const product = {
-                id: btn.dataset.id!,
-                name: btn.dataset.name!,
-                price: parseFloat(btn.dataset.price!),
-                image: btn.dataset.image!,
-                brand: btn.dataset.brand,
-            };
-            addToCart(product);
-        });
-    });
-</script>
