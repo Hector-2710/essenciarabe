@@ -17,7 +17,23 @@ export async function getStaticPaths() {
         props: { data: decant.data, category: "Decant" },
     }));
 
-    return [...perfumePaths, ...decantPaths];
+    // Agregar rutas basadas en IDs
+    const perfumeIdPaths = perfumes.map((perfume) => ({
+        params: { name: perfume.data.id },
+        props: { data: perfume.data, category: "Perfume" },
+    }));
+
+    const decantIdPaths = decants.map((decant) => ({
+        params: { name: decant.data.id },
+        props: { data: decant.data, category: "Decant" },
+    }));
+
+    return [
+        ...perfumePaths,
+        ...decantPaths,
+        ...perfumeIdPaths,
+        ...decantIdPaths,
+    ];
 }
 
 const { data, category } = Astro.props;
