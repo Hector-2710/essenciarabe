@@ -17,6 +17,7 @@ const perfumes = await getCollection("decants");
             {
                 perfumes.map((perfume) => (
                     <PerfumeCard
+                        id={perfume.data.id}
                         name={perfume.data.name}
                         brand={perfume.data.brand}
                         price={perfume.data.price}
