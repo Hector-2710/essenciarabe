@@ -17,7 +17,23 @@ export async function getStaticPaths() {
         props: { data: decant.data, category: "Decant" },
     }));
 
-    return [...perfumePaths, ...decantPaths];
+    // Agregar rutas basadas en IDs
+    const perfumeIdPaths = perfumes.map((perfume) => ({
+        params: { name: perfume.data.id },
+        props: { data: perfume.data, category: "Perfume" },
+    }));
+
+    const decantIdPaths = decants.map((decant) => ({
+        params: { name: decant.data.id },
+        props: { data: decant.data, category: "Decant" },
+    }));
+
+    return [
+        ...perfumePaths,
+        ...decantPaths,
+        ...perfumeIdPaths,
+        ...decantIdPaths,
+    ];
 }
 
 const { data, category } = Astro.props;
@@ -32,7 +48,7 @@ const { id, name, brand, price, image, description, available, stock } = data;
             <!-- Back Button -->
             <div class="mb-8">
                 <a
-                    href="/"
+                    href={category === "Perfume" ? "/perfumes" : "/decants"}
                     class="inline-flex items-center gap-2 px-6 py-2.5 bg-white rounded-full text-black font-semibold shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-[#e5e5e7] hover:bg-[#f5f5f7] hover:shadow-[0_4px_15px_rgba(0,0,0,0.1)] transition-all duration-300 group"
                 >
                     <svg
@@ -48,7 +64,7 @@ const { id, name, brand, price, image, description, available, stock } = data;
                         class="transition-transform group-hover:-translate-x-1"
                         ><path d="m15 18-6-6 6-6"></path></svg
                     >
-                    Volver al inicio
+                    Volver a {category === "Perfume" ? "Perfumes" : "Decants"}
                 </a>
             </div>
 
