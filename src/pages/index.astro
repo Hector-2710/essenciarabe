@@ -4,48 +4,342 @@ import Navbar from "../components/Navbar.astro";
 import PerfumeCard from "../components/PerfumeCard.astro";
 import { getCollection } from "astro:content";
 
+// Solo obtenemos algunos productos destacados para la página de inicio
 const perfumesList = await getCollection("perfumes");
 const decantsList = await getCollection("decants");
-const perfumes = [...perfumesList, ...decantsList];
+const allPerfumes = [...perfumesList, ...decantsList];
+
+// Productos destacados (puedes cambiar estos IDs según tus preferencias)
+const featuredProducts = allPerfumes.filter((product) =>
+    [
+        "decant-khamrah",
+        "perfume-asad",
+        "perfume-najdia-intense",
+        "decant-hawas",
+    ].includes(product.data.id),
+);
 ---
 
-<Layout title="Inicio | Essenciarabe">
+<Layout
+    title="Esenciarabe Newsletter | Descubre el mundo de la perfumería árabe"
+>
     <Navbar />
 
     <main class="min-h-screen bg-[#f5f5f7]">
-        <section class="max-w-7xl mx-auto px-6 py-24 text-center">
+        <!-- Hero Newsletter Style -->
+        <section class="max-w-4xl mx-auto px-6 py-16 text-center">
+            <div class="mb-4">
+                <span
+                    class="inline-block bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium tracking-wide uppercase"
+                >
+                    Newsletter · Marzo 2026
+                </span>
+            </div>
             <h1
-                class="text-5xl md:text-7xl font-semibold tracking-tight text-[#1d1d1f] mb-6"
+                class="text-4xl md:text-6xl font-light tracking-tight text-[#1d1d1f] mb-8 leading-tight"
             >
-                Descubre la Esenciarabe
+                El Arte de la
+                <span class="italic text-amber-600">Perfumería Árabe</span>
             </h1>
             <p
-                class="text-xl md:text-2xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-normal"
+                class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light mb-8"
             >
-                Una colección seleccionada especificamente con los mejores
-                perfumes arabes del mercado
+                Descubre las tradiciones milenarias, las notas más exquisitas y
+                las últimas novedades del fascinante mundo de los perfumes
+                árabes. Una experiencia sensorial única.
             </p>
+            <a
+                href="/perfumes"
+                class="inline-block bg-[#1d1d1f] text-white px-8 py-3 rounded-full hover:bg-gray-800 transition-colors font-medium"
+            >
+                Ver Catálogo De Decants
+            </a>
         </section>
 
-        <section class="max-w-7xl mx-auto px-6 pb-24">
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-            >
-                {
-                    perfumes.map((perfume) => (
-                        <PerfumeCard
-                            id={perfume.data.id}
-                            name={perfume.data.name}
-                            brand={perfume.data.brand}
-                            price={perfume.data.price}
-                            image={perfume.data.image}
-                            description={perfume.data.description}
-                            available={perfume.data.available}
-                            stock={perfume.data.stock}
+        <!-- Artículo Principal -->
+        <section class="max-w-6xl mx-auto px-6 py-16">
+            <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
+                <div class="grid md:grid-cols-2 gap-0">
+                    <div
+                        class="order-2 md:order-1 p-12 flex flex-col justify-center"
+                    >
+                        <span
+                            class="text-amber-600 text-sm font-medium uppercase tracking-wide mb-4"
+                            >Artículo Destacado</span
+                        >
+                        <h2 class="text-3xl font-semibold text-[#1d1d1f] mb-6">
+                            La Magia del Oud: El Oro Líquido de Arabia
+                        </h2>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                            El oud, conocido como "el rey de los perfumes", ha
+                            cautivado durante siglos con su aroma profundo y
+                            misterioso. Descubre por qué esta resina preciosa
+                            sigue siendo el ingrediente más valorado en la
+                            perfumería árabe moderna.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed mb-8">
+                            Desde las antiguas rutas comerciales hasta los
+                            laboratorios contemporáneos, el oud mantiene su
+                            estatus como la esencia más sofisticada y deseada
+                            del mundo árabe.
+                        </p>
+                        <a
+                            href="/us"
+                            class="text-amber-600 font-medium hover:text-amber-700 transition-colors inline-flex items-center"
+                        >
+                            Leer más sobre nosotros →
+                        </a>
+                    </div>
+                    <div
+                        class="order-1 md:order-2 bg-gradient-to-br from-amber-50 to-orange-100 p-12 flex items-center justify-center"
+                    >
+                        <div class="text-center">
+                            <div
+                                class="w-32 h-32 bg-amber-200 rounded-full mb-6 mx-auto flex items-center justify-center"
+                            >
+                                <span class="text-4xl">🌟</span>
+                            </div>
+                            <h3 class="text-xl font-medium text-[#1d1d1f] mb-2">
+                                Tradición Milenaria
+                            </h3>
+                            <p class="text-gray-600">
+                                Más de 1000 años de perfección aromática
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Perfume de la Semana -->
+        <section class="max-w-6xl mx-auto px-6 py-16">
+            <div class="text-center mb-12">
+                <span
+                    class="inline-block bg-rose-100 text-rose-600 px-4 py-2 rounded-full text-sm font-medium tracking-wide uppercase mb-4"
+                >
+                    Perfume de la Semana
+                </span>
+                <h2 class="text-3xl font-semibold text-[#1d1d1f] mb-8">
+                    Khamrah by Lattafa
+                </h2>
+
+                <!-- Grid para imágenes lado a lado -->
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto mb-12"
+                >
+                    <div class="text-center">
+                        <img
+                            src="/images/khamra.jpg"
+                            alt="Khamrah by Lattafa"
+                            class="w-96 h-96 mx-auto rounded-2xl shadow-lg object-cover object-center"
                         />
+                        <p class="text-gray-500 text-sm mt-4 font-medium">
+                            Fragancia
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <img
+                            src="/notes/khamra.jpg"
+                            alt="Notas aromáticas de Khamrah"
+                            class="w-96 h-96 mx-auto rounded-2xl shadow-lg object-cover object-center"
+                        />
+                        <p class="text-gray-500 text-sm mt-4 font-medium">
+                            Pirámide Olfativa
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-3xl p-12"
+            >
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Una sinfonía gourmand que combina dátiles, praliné y
+                    vainilla en una experiencia olfativa irresistible. El
+                    favorito absoluto de nuestros clientes esta temporada.
+                </p>
+
+                <div class="text-center mt-8">
+                    <a
+                        href="/Khamrah"
+                        class="bg-rose-600 text-white px-8 py-3 rounded-full hover:bg-rose-700 transition-colors font-medium"
+                    >
+                        Conoce Khamrah
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos Destacados -->
+        <section class="max-w-7xl mx-auto px-6 py-16">
+            <div class="text-center mb-12">
+                <span
+                    class="inline-block bg-indigo-100 text-indigo-600 px-4 py-2 rounded-full text-sm font-medium tracking-wide uppercase mb-4"
+                >
+                    Selección del Editor
+                </span>
+                <h2 class="text-3xl font-semibold text-[#1d1d1f] mb-4">
+                    Fragancias Imperdibles
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Una cuidadosa selección de los perfumes árabes más
+                    excepcionales de nuestra colección.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    featuredProducts.map((perfume) => (
+                        <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+                            <PerfumeCard
+                                id={perfume.data.id}
+                                name={perfume.data.name}
+                                brand={perfume.data.brand}
+                                price={perfume.data.price}
+                                image={perfume.data.image}
+                                description={perfume.data.description}
+                                available={perfume.data.available}
+                                stock={perfume.data.stock}
+                            />
+                        </div>
                     ))
                 }
             </div>
         </section>
+
+        <!-- Últimos Lanzamientos -->
+        <section class="max-w-6xl mx-auto px-6 py-16">
+            <div class="text-center mb-12">
+                <span
+                    class="inline-block bg-emerald-100 text-emerald-600 px-4 py-2 rounded-full text-sm font-medium tracking-wide uppercase mb-4"
+                >
+                    Próximos Lanzamientos
+                </span>
+                <h2 class="text-3xl font-semibold text-[#1d1d1f] mb-4">
+                    Exclusivas Que Llegan Pronto a Esenciarabe
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Prepárate para las nuevas fragancias que revolucionarán tu
+                    colección. Sé el primero en conocerlas antes de su llegada
+                    oficial.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- 9PM Night Oud -->
+                <div
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow"
+                >
+                    <div class="relative">
+                        <img
+                            src="/images/9pm-night-oud.jpg"
+                            alt="9PM Night Oud"
+                            class="w-full h-64 object-cover object-center"
+                        />
+                        <div class="absolute top-4 right-4">
+                            <span
+                                class="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium"
+                            >
+                                Próximamente
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-semibold text-[#1d1d1f] text-xl mb-2">
+                            9PM Night Oud
+                        </h3>
+                        <p class="text-gray-500 text-sm mb-4">Afnan Perfumes</p>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            La evolución nocturna del famoso 9PM. Una mezcla
+                            hipnótica de oud birmano, vainilla negra y especias
+                            orientales que despierta los sentidos al anochecer.
+                        </p>
+                        <div class="flex items-center justify-between">
+                           
+                            <span class="text-xs text-emerald-600 font-medium"
+                                >Marzo 2026</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rayhaan Obsidian -->
+                <div
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow"
+                >
+                    <div class="relative">
+                        <img
+                            src="/images/rayhaan-obsidian.jpg"
+                            alt="Rayhaan Obsidian"
+                            class="w-full h-64 object-cover object-center"
+                        />
+                        <div class="absolute top-4 right-4">
+                            <span
+                                class="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium"
+                            >
+                                Próximamente
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-semibold text-[#1d1d1f] text-xl mb-2">
+                            Rayhaan Obsidian
+                        </h3>
+                        <p class="text-gray-500 text-sm mb-4">
+                            Lattafa Perfumes
+                        </p>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            La versión más intensa y sofisticada de Rayhaan.
+                            Notas profundas de oud, cuero y ámbar gris crean una
+                            experiencia olfativa inolvidable y magnética.
+                        </p>
+                        <div class="flex items-center justify-between">
+                          
+                            <span class="text-xs text-emerald-600 font-medium"
+                                >Abril 2026</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hawas Platinum -->
+                <div
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow"
+                >
+                    <div class="relative">
+                        <img
+                            src="/images/hawas-platinum.jpg"
+                            alt="Hawas Platinum"
+                            class="w-full h-64 object-cover object-center"
+                        />
+                        <div class="absolute top-4 right-4">
+                            <span
+                                class="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium"
+                            >
+                                Próximamente
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-semibold text-[#1d1d1f] text-xl mb-2">
+                            Hawas Platinum
+                        </h3>
+                        <p class="text-gray-500 text-sm mb-4">
+                            Rasasi Perfumes
+                        </p>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            La edición más premium de la icónica línea Hawas.
+                            Con bergamota siciliana, oud camboyano y almizcle
+                            blanco para una proyección excepcional.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            
+                            <span class="text-xs text-emerald-600 font-medium"
+                                >Mayo 2026</span
+                            >
+                        </div>
+                </div>
+            </div>
+        </div>
     </main>
 </Layout>
