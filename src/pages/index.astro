@@ -10,13 +10,15 @@ const decantsList = await getCollection("decants");
 const allPerfumes = [...perfumesList, ...decantsList];
 
 // Productos destacados (puedes cambiar estos IDs según tus preferencias)
-const featuredProducts = allPerfumes.filter((product) =>
-    [
-        "decant-khamrah",
-        "perfume-asad",
-        "perfume-najdia-intense",
-        "decant-hawas",
-    ].includes(product.data.id),
+const featuredProducts = allPerfumes.filter(
+    (product) =>
+        product.data.id !== undefined &&
+        [
+            "decant-khamrah",
+            "perfume-asad",
+            "perfume-najdia-intense",
+            "decant-hawas",
+        ].includes(product.data.id),
 );
 ---
 
@@ -44,7 +46,7 @@ const featuredProducts = allPerfumes.filter((product) =>
             <p
                 class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light mb-8"
             >
-                Descubre las tradiciones milenarias, las notas más exquisitas y
+                Descubre las tradiciones olfativas, las notas más exquisitas y
                 las últimas novedades del fascinante mundo de los perfumes
                 árabes. Una experiencia sensorial única.
             </p>
@@ -232,7 +234,7 @@ const featuredProducts = allPerfumes.filter((product) =>
                 >
                     <div class="relative">
                         <img
-                            src="/images/9pm-night-oud.jpg"
+                            src="/public/prox/9pm-night.jpg"
                             alt="9PM Night Oud"
                             class="w-full h-64 object-cover object-center"
                         />
@@ -255,9 +257,8 @@ const featuredProducts = allPerfumes.filter((product) =>
                             orientales que despierta los sentidos al anochecer.
                         </p>
                         <div class="flex items-center justify-between">
-                           
                             <span class="text-xs text-emerald-600 font-medium"
-                                >Marzo 2026</span
+                                >Abril 2026</span
                             >
                         </div>
                     </div>
@@ -269,7 +270,7 @@ const featuredProducts = allPerfumes.filter((product) =>
                 >
                     <div class="relative">
                         <img
-                            src="/images/rayhaan-obsidian.jpg"
+                            src="/public/prox/obsidian.jpg"
                             alt="Rayhaan Obsidian"
                             class="w-full h-64 object-cover object-center"
                         />
@@ -294,7 +295,6 @@ const featuredProducts = allPerfumes.filter((product) =>
                             experiencia olfativa inolvidable y magnética.
                         </p>
                         <div class="flex items-center justify-between">
-                          
                             <span class="text-xs text-emerald-600 font-medium"
                                 >Abril 2026</span
                             >
@@ -302,14 +302,14 @@ const featuredProducts = allPerfumes.filter((product) =>
                     </div>
                 </div>
 
-                <!-- Hawas Platinum -->
+                <!-- Hawas London -->
                 <div
                     class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow"
                 >
                     <div class="relative">
                         <img
-                            src="/images/hawas-platinum.jpg"
-                            alt="Hawas Platinum"
+                            src="/public/prox/hawas-london.jpg"
+                            alt="Hawas London"
                             class="w-full h-64 object-cover object-center"
                         />
                         <div class="absolute top-4 right-4">
@@ -322,24 +322,24 @@ const featuredProducts = allPerfumes.filter((product) =>
                     </div>
                     <div class="p-6">
                         <h3 class="font-semibold text-[#1d1d1f] text-xl mb-2">
-                            Hawas Platinum
+                            Hawas London
                         </h3>
                         <p class="text-gray-500 text-sm mb-4">
                             Rasasi Perfumes
                         </p>
                         <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                            La edición más premium de la icónica línea Hawas.
-                            Con bergamota siciliana, oud camboyano y almizcle
-                            blanco para una proyección excepcional.
+                            Una interpretación urbana y sofisticada de Hawas.
+                            Con bergamota londinense, té Earl Grey y maderas
+                            nobles que capturan la elegancia británica.
                         </p>
                         <div class="flex items-center justify-between">
-                            
                             <span class="text-xs text-emerald-600 font-medium"
-                                >Mayo 2026</span
+                                >Abril 2026</span
                             >
                         </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 </Layout>
