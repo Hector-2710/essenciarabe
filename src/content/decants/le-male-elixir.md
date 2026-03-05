@@ -1,4 +1,5 @@
 ---
+id: "decant-le-male-elixir"
 name: "Le Male Elixir"
 brand: "Jean Paul Gaultier"
 price: 7990

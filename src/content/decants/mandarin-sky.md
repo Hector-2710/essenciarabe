@@ -1,4 +1,5 @@
 ---
+id: "decant-mandarin-sky"
 name: "Mandarin Sky"
 brand: "Armaf"
 price: 3990

@@ -1,4 +1,5 @@
 ---
+id: "decant-liquid-brun"
 name: "Liquid Brun"
 brand: "French Avenue"
 price: 3990

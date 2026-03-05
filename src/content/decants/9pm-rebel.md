@@ -1,4 +1,5 @@
 ---
+id: "decant-9pm-rebel"
 name: "9pm Rebel"
 brand: "Afnan"
 price: 4990

@@ -1,4 +1,5 @@
 ---
+id: "decant-yeah-man"
 name: "Yeah! Man"
 brand: "Maison Alhambra"
 price: 2490

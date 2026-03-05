@@ -11,13 +11,35 @@ export interface CartItem {
 
 export const isCartOpen = atom(false);
 
-const savedItems = typeof window !== 'undefined' ? localStorage.getItem('cart_items') : null;
-export const cartItems = map<Record<string, CartItem>>(savedItems ? JSON.parse(savedItems) : {});
+// Función para cargar datos del localStorage de manera segura
+function loadCartFromStorage(): Record<string, CartItem> {
+    if (typeof window === 'undefined') return {};
 
-cartItems.subscribe((items) => {
-    if (typeof window !== 'undefined') {
-        localStorage.setItem('cart_items', JSON.stringify(items));
+    try {
+        const savedItems = localStorage.getItem('cart_items');
+        return savedItems ? JSON.parse(savedItems) : {};
+    } catch (error) {
+        console.warn('Error loading cart from localStorage:', error);
+        return {};
     }
+}
+
+// Función para guardar en localStorage de manera segura
+function saveCartToStorage(items: Record<string, CartItem>) {
+    if (typeof window === 'undefined') return;
+
+    try {
+        localStorage.setItem('cart_items', JSON.stringify(items));
+    } catch (error) {
+        console.warn('Error saving cart to localStorage:', error);
+    }
+}
+
+export const cartItems = map<Record<string, CartItem>>(loadCartFromStorage());
+
+// Suscripción para guardar automáticamente
+cartItems.subscribe((items) => {
+    saveCartToStorage(items);
 });
 
 export function openCart() {
@@ -33,18 +55,27 @@ export function toggleCart() {
 }
 
 export function addToCart(product: Omit<CartItem, 'quantity'>) {
-    const existingItem = cartItems.get()[product.id];
+    console.log('Adding to cart:', product);
+
+    const currentItems = cartItems.get();
+    const existingItem = currentItems[product.id];
+
     if (existingItem) {
+        // Incrementar cantidad si ya existe
         cartItems.setKey(product.id, {
             ...existingItem,
             quantity: existingItem.quantity + 1,
         });
+        console.log('Updated quantity for:', product.name, 'New quantity:', existingItem.quantity + 1);
     } else {
+        // Añadir nuevo producto con cantidad 1
         cartItems.setKey(product.id, {
             ...product,
             quantity: 1,
         });
+        console.log('Added new product:', product.name);
     }
+
     openCart();
 }
 

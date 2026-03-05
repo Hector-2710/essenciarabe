@@ -1,4 +1,5 @@
 ---
+id: "decant-faris"
 name: "Faris"
 brand: "Jivi Amyr"
 price: 3990

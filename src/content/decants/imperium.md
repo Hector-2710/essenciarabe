@@ -1,4 +1,5 @@
 ---
+id: "decant-imperium"
 name: "Imperium"
 brand: "Zimaya"
 price: 2500

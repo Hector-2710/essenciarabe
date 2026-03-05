@@ -1,4 +1,5 @@
 ---
+id: "decant-supremacy-incense"
 name: "Supremacy Incense"
 brand: "Afnan"
 price: 3300

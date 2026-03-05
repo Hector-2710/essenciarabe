@@ -1,4 +1,5 @@
 ---
+id: "decant-vintage-radio"
 name: "Vintage Radio"
 brand: "Lattafa"
 price: 3990

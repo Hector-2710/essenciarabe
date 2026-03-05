@@ -9,6 +9,7 @@ const perfumes = await getCollection("perfumes");
 
 <Layout title="Perfumes | Essenciarabe">
     <Navbar />
+    <main class="min-h-screen bg-[#f5f5f7]">
     <section class="max-w-5xl mx-auto px-6 py-12">
         <h2 class="text-4xl font-semibold text-[#1d1d1f] mb-6">
             Nuestros Perfumes
@@ -17,6 +18,7 @@ const perfumes = await getCollection("perfumes");
             {
                 perfumes.map((perfume) => (
                     <PerfumeCard
+                        id={perfume.data.id}
                         name={perfume.data.name}
                         brand={perfume.data.brand}
                         price={perfume.data.price}

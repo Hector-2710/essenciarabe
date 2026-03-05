@@ -1,4 +1,5 @@
 ---
+id: "perfume-crimson"
 name: "Crimson"
 brand: "Rayhaan"
 price: 29990

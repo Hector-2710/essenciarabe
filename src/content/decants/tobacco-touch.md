@@ -1,4 +1,5 @@
 ---
+id: "decant-tobacco-touch"
 name: "Tobacco Touch"
 brand: "Maison Alhambra"
 price: 2500

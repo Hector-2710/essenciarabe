@@ -1,4 +1,5 @@
 ---
+id: "decant-hawas-elixir"
 name: "Hawas Elixir"
 brand: "Rasasi"
 price: 4490

@@ -1,4 +1,5 @@
 ---
+id: "perfume-luxe-blanc"
 name: "Luxe Blanc"
 brand: "Maison Alhambra"
 price: 27990

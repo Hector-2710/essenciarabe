@@ -2,6 +2,7 @@ import { defineCollection, z } from 'astro:content';
 
 const perfumes = defineCollection({
     schema: z.object({
+        id: z.string().optional(),
         name: z.string(),
         brand: z.string(),
         price: z.number(),
@@ -14,6 +15,7 @@ const perfumes = defineCollection({
 
 const decants = defineCollection({
     schema: z.object({
+        id: z.string().optional(),
         name: z.string(),
         brand: z.string(),
         price: z.number(),

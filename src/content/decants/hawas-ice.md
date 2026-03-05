@@ -1,4 +1,5 @@
 ---
+id: "decant-hawas-ice"
 name: "Hawas Ice"
 brand: "rasasi"
 price: 4200

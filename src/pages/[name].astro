@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 }
 
 const { data, category } = Astro.props;
-const { name, brand, price, image, description, available, stock } = data;
+const { id, name, brand, price, image, description, available, stock } = data;
 ---
 
 <Layout title={`${name} | Essenciarabe`}>
@@ -58,6 +58,7 @@ const { name, brand, price, image, description, available, stock } = data;
                     <img
                         src={image}
                         alt={name}
+                        transition:name={id}
                         class="w-full h-full object-cover rounded-[2rem] z-10 shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
                     />
                     <div

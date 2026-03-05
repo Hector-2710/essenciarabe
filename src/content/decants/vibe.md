@@ -1,4 +1,5 @@
 ---
+id: "decant-vibe"
 name: "Vibe"
 brand: "Maison Alhambra"
 price: 3990

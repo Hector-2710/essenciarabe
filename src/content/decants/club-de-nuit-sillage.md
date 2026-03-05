@@ -1,4 +1,5 @@
 ---
+id: "decant-club-de-nuit-sillage"
 name: "Club de Nuit Sillage"
 brand: "Armaf"
 price: 3990

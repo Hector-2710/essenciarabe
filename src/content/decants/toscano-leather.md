@@ -1,4 +1,5 @@
 ---
+id: "decant-toscano-leather"
 name: "Toscano Leather"
 brand: "Maison Alhambra"
 price: 2500

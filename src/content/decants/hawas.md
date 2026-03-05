@@ -1,4 +1,5 @@
 ---
+id: "decant-hawas"
 name: "Hawas"
 brand: "Rasasi"
 price: 3700

@@ -1,4 +1,5 @@
 ---
+id: "perfume-asad"
 name: "Asad"
 brand: "Lattafa"
 price: 27990

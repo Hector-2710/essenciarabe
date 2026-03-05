@@ -1,4 +1,5 @@
 ---
+id: "decant-your-touch-intense"
 name: "Your Touch Intense"
 brand: "Lattafa"
 price: 2990

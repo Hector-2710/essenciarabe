@@ -1,4 +1,5 @@
 ---
+id: "decant-najdia-intense"
 name: "Najdia Intense"
 brand: "Lattafa"
 price: 2990

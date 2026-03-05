@@ -1,4 +1,5 @@
 ---
+id: "perfume-faris"
 name: "Faris"
 brand: "Jivi Amyr"
 price: 34990

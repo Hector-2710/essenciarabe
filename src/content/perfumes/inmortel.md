@@ -1,4 +1,5 @@
 ---
+id: "perfume-inmortel"
 name: "Inmortel"
 brand: "Maison Alhambra"
 price: 26990

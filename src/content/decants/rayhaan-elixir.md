@@ -1,4 +1,5 @@
 ---
+id: "decant-rayhaan-elixir"
 name: "Rayhaan Elixir"
 brand: "Rayhaan"
 price: 3990
