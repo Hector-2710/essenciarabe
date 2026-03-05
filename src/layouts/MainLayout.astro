@@ -42,7 +42,7 @@ const { title } = Astro.props;
 
             // Variables globales para prevenir duplicados
             let cartFunctionalityInitialized = false;
-            let cartSubscriptions : any[] = [];
+            let cartSubscriptions: any[] = [];
 
             function setupCartFunctionality() {
                 console.log("Setting up cart functionality...");
@@ -52,40 +52,48 @@ const { title } = Astro.props;
                 cartSubscriptions = [];
 
                 // Remover listeners anteriores para evitar duplicados
-                const oldHandler = window.cartClickHandler;
+                const oldHandler = (window as any).cartClickHandler;
                 if (oldHandler) {
                     document.removeEventListener("click", oldHandler);
                 }
 
                 // Event handler para botones "añadir al carrito"
-                window.cartClickHandler = function (e) {
-                    const target = e.target;
+                (window as any).cartClickHandler = function (e: Event) {
+                    const target = e.target as HTMLElement;
 
                     if (
                         target &&
                         target.classList &&
                         target.classList.contains("add-to-cart-btn") &&
-                        !target.disabled
+                        !(target as any).disabled
                     ) {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        const product = {
-                            id: target.dataset.id || target.dataset.name,
-                            name: target.dataset.name,
-                            price: parseFloat(target.dataset.price || "0"),
-                            image: target.dataset.image,
-                            brand: target.dataset.brand,
-                        };
+                        const id = target.dataset.id || target.dataset.name;
+                        const name = target.dataset.name;
+                        const price = parseFloat(target.dataset.price || "0");
+                        const image = target.dataset.image;
+                        const brand = target.dataset.brand;
 
-                        if (product.name && product.price > 0) {
+                        if (id && name && price > 0) {
+                            const product = {
+                                id,
+                                name,
+                                price,
+                                image: image || "",
+                                brand: brand || "",
+                            };
                             console.log("Adding product to cart:", product);
                             addToCart(product);
                         }
                     }
                 };
 
-                document.addEventListener("click", window.cartClickHandler);
+                document.addEventListener(
+                    "click",
+                    (window as any).cartClickHandler,
+                );
 
                 // Setup del carrito
                 setupCart();
@@ -313,14 +321,17 @@ const { title } = Astro.props;
                             .querySelectorAll(".remove-btn")
                             .forEach((btn) => {
                                 btn.addEventListener("click", (e) => {
-                                    const id = e.target.dataset.id;
+                                    const target = e.target as HTMLElement;
+                                    if (!target) return;
+                                    const id = target.dataset.id;
                                     if (id) removeFromCart(id);
                                 });
                             });
 
                         document.querySelectorAll(".qty-btn").forEach((btn) => {
                             btn.addEventListener("click", (e) => {
-                                const target = e.target;
+                                const target = e.target as HTMLElement;
+                                if (!target) return;
                                 const id = target.dataset.id;
                                 if (!id) return;
 
