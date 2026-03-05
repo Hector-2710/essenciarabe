@@ -286,7 +286,8 @@ const { title } = Astro.props;
                     }
                 });
 
-                // Suscripción a los items del carrito
+                // Suscripción a los items del carrito - optimizada
+                let lastCartState: Record<string, any> = {};
                 const cartItemsSub = cartItems.subscribe((items) => {
                     const itemsArray = Object.values(items);
 
@@ -298,6 +299,7 @@ const { title } = Astro.props;
                             "pointer-events-none",
                         );
                         if (subtotalEl) subtotalEl.innerText = "$0";
+                        lastCartState = {};
                         return;
                     }
 
@@ -310,79 +312,122 @@ const { title } = Astro.props;
 
                     let total = 0;
                     if (cartList) {
-                        cartList.innerHTML = itemsArray
-                            .map((item) => {
+                        // Verificar si necesitamos regenerar completamente o solo actualizar
+                        const currentIds = new Set(
+                            itemsArray.map((item) => item.id),
+                        );
+                        const lastIds = new Set(Object.keys(lastCartState));
+                        const needsFullRegen =
+                            currentIds.size !== lastIds.size ||
+                            [...currentIds].some((id) => !lastIds.has(id)) ||
+                            [...lastIds].some((id) => !currentIds.has(id));
+
+                        if (needsFullRegen) {
+                            // Solo regenerar completamente cuando se agreguen/quiten productos
+                            cartList.innerHTML = itemsArray
+                                .map((item) => {
+                                    total += item.price * item.quantity;
+                                    return `
+                          <li class="flex py-2" data-item-id="${item.id}">
+                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
+                              <img src="${item.image}" alt="${item.name}" class="h-full w-full object-cover object-center">
+                            </div>
+                            <div class="ml-4 flex flex-1 flex-col">
+                              <div>
+                                <div class="flex justify-between text-base font-medium text-gray-900">
+                                  <h3 class="line-clamp-1">${item.name}</h3>
+                                  <p class="ml-4 item-total-price">$${(item.price * item.quantity).toLocaleString("es-CL")}</p>
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500 uppercase tracking-wider font-bold">${item.brand || ""}</p>
+                              </div>
+                              <div class="flex flex-1 items-end justify-between text-sm">
+                                <div class="flex items-center border border-gray-200 rounded-full px-3 py-1 space-x-3 bg-gray-50">
+                                  <button class="qty-btn dec w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200 text-gray-700 font-medium" data-id="${item.id}">-</button>
+                                  <span class="w-6 text-center font-medium text-gray-900 item-quantity">${item.quantity}</span>
+                                  <button class="qty-btn inc w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200 text-gray-700 font-medium" data-id="${item.id}">+</button>
+                                </div>
+                                <button type="button" class="font-medium text-gray-600 hover:text-gray-900 remove-btn px-3 py-1 rounded-full hover:bg-gray-100 transition-all duration-200" data-id="${item.id}">
+                                  Quitar
+                                </button>
+                              </div>
+                            </div>
+                          </li>
+                        `;
+                                })
+                                .join("");
+
+                            // Re-attach event listeners solo cuando regeneremos
+                            setupCartEventListeners(items);
+                        } else {
+                            // Solo actualizar cantidades y precios
+                            itemsArray.forEach((item) => {
                                 total += item.price * item.quantity;
-                                return `
-                      <li class="flex py-2">
-                        <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                          <img src="${item.image}" alt="${item.name}" class="h-full w-full object-cover object-center">
-                        </div>
-                        <div class="ml-4 flex flex-1 flex-col">
-                          <div>
-                            <div class="flex justify-between text-base font-medium text-gray-900">
-                              <h3 class="line-clamp-1">${item.name}</h3>
-                              <p class="ml-4">$${(item.price * item.quantity).toLocaleString("es-CL")}</p>
-                            </div>
-                            <p class="mt-1 text-xs text-gray-500 uppercase tracking-wider font-bold">${item.brand || ""}</p>
-                          </div>
-                          <div class="flex flex-1 items-end justify-between text-sm">
-                            <div class="flex items-center border border-gray-200 rounded-full px-3 py-1 space-x-3 bg-gray-50">
-                              <button class="qty-btn dec w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200 text-gray-700 font-medium" data-id="${item.id}">-</button>
-                              <span class="w-6 text-center font-medium text-gray-900">${item.quantity}</span>
-                              <button class="qty-btn inc w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200 text-gray-700 font-medium" data-id="${item.id}">+</button>
-                            </div>
-                            <button type="button" class="font-medium text-gray-600 hover:text-gray-900 remove-btn px-3 py-1 rounded-full hover:bg-gray-100 transition-all duration-200" data-id="${item.id}">
-                              Quitar
-                            </button>
-                          </div>
-                        </div>
-                      </li>
-                    `;
-                            })
-                            .join("");
+                                const lastItem = lastCartState[item.id];
 
-                        // Re-attach event listeners
-                        document
-                            .querySelectorAll(".remove-btn")
-                            .forEach((btn) => {
-                                btn.addEventListener("click", (e) => {
-                                    const target = e.target as HTMLElement;
-                                    if (!target) return;
-                                    const id = target.dataset.id;
-                                    if (id) removeFromCart(id);
-                                });
-                            });
-
-                        document.querySelectorAll(".qty-btn").forEach((btn) => {
-                            btn.addEventListener("click", (e) => {
-                                const target = e.target as HTMLElement;
-                                if (!target) return;
-                                const id = target.dataset.id;
-                                if (!id) return;
-
-                                const currentItem = items[id];
-                                if (!currentItem) return;
-
-                                if (target.classList.contains("inc")) {
-                                    updateQuantity(
-                                        id,
-                                        currentItem.quantity + 1,
+                                if (
+                                    !lastItem ||
+                                    lastItem.quantity !== item.quantity
+                                ) {
+                                    // Actualizar cantidad
+                                    const quantityEl = cartList.querySelector(
+                                        `li[data-item-id="${item.id}"] .item-quantity`,
                                     );
-                                } else {
-                                    updateQuantity(
-                                        id,
-                                        currentItem.quantity - 1,
+                                    if (quantityEl) {
+                                        quantityEl.textContent =
+                                            item.quantity.toString();
+                                    }
+
+                                    // Actualizar precio total del item
+                                    const priceEl = cartList.querySelector(
+                                        `li[data-item-id="${item.id}"] .item-total-price`,
                                     );
+                                    if (priceEl) {
+                                        priceEl.textContent = `$${(item.price * item.quantity).toLocaleString("es-CL")}`;
+                                    }
                                 }
                             });
-                        });
+                        }
                     }
 
+                    // Actualizar subtotal
                     if (subtotalEl) {
                         subtotalEl.innerText = `$${total.toLocaleString("es-CL")}`;
                     }
+
+                    // Guardar estado actual para la próxima comparación
+                    lastCartState = { ...items };
                 });
+
+                function setupCartEventListeners(items: Record<string, any>) {
+                    // Event listeners para botones de remover
+                    document.querySelectorAll(".remove-btn").forEach((btn) => {
+                        btn.addEventListener("click", (e) => {
+                            const target = e.target as HTMLElement;
+                            if (!target) return;
+                            const id = target.dataset.id;
+                            if (id) removeFromCart(id);
+                        });
+                    });
+
+                    // Event listeners para botones de cantidad
+                    document.querySelectorAll(".qty-btn").forEach((btn) => {
+                        btn.addEventListener("click", (e) => {
+                            const target = e.target as HTMLElement;
+                            if (!target) return;
+                            const id = target.dataset.id;
+                            if (!id) return;
+
+                            const currentItem = items[id];
+                            if (!currentItem) return;
+
+                            if (target.classList.contains("inc")) {
+                                updateQuantity(id, currentItem.quantity + 1);
+                            } else {
+                                updateQuantity(id, currentItem.quantity - 1);
+                            }
+                        });
+                    });
+                }
 
                 // Guardar suscripciones para limpiar después
                 cartSubscriptions.push(cartOpenSub, cartItemsSub);
