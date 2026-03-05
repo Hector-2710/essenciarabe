@@ -1,4 +1,5 @@
 ---
+id: "decant-khamrah-qahwa"
 name: "Khamrah Qahwa"
 brand: "Lattafa"
 price: 3990

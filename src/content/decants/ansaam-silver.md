@@ -1,4 +1,5 @@
 ---
+id: "decant-ansaam-silver"
 name: "Ansaam Silver"
 brand: "Lattafa"
 price: 3500

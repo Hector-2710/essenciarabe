@@ -1,4 +1,5 @@
 ---
+id: "decant-asad"
 name: "Asad"
 brand: "Lattafa"
 price: 3700

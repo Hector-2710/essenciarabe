@@ -1,4 +1,5 @@
 ---
+id: "decant-sharaf-blend"
 name: "Sharaf Blend"
 brand: "Zimaya"
 price: 3500

@@ -1,4 +1,5 @@
 ---
+id: "decant-stallion-53"
 name: "Stallion 53"
 brand: "Emper"
 price: 3990

@@ -1,4 +1,5 @@
 ---
+id: "decant-crimson"
 name: "Crimson"
 brand: "Rayhaan"
 price: 3990

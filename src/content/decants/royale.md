@@ -1,4 +1,5 @@
 ---
+id: "decant-royale"
 name: "Royale"
 brand: "Jo Milano"
 price: 6990

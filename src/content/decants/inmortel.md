@@ -1,4 +1,5 @@
 ---
+id: "decant-inmortel"
 name: "Inmortel"
 brand: "Maison Alhambra"
 price: 3700

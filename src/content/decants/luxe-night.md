@@ -1,4 +1,5 @@
 ---
+id: "decant-luxe-night"
 name: "Luxe Night"
 brand: "Maison Alhambra"
 price: 3990

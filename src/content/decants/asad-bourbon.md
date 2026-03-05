@@ -1,4 +1,5 @@
 ---
+id: "decant-asad-bourbon"
 name: "Asad Bourbon"
 brand: "Lattafa"
 price: 3990

@@ -1,4 +1,5 @@
 ---
+id: "decant-essence-de-blanc"
 name: "Essence de Blanc"
 brand: "French Avenue"
 price: 3990

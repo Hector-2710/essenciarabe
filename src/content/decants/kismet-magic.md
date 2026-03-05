@@ -1,4 +1,5 @@
 ---
+id: "decant-kismet-magic"
 name: "Kismet Magic"
 brand: "Maison Alhambra"
 price: 2700

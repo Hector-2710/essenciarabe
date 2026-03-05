@@ -1,4 +1,5 @@
 ---
+id: "decant-liam-blue"
 name: "Liam BLue"
 brand: "Lattafa"
 price: 3990

@@ -1,4 +1,5 @@
 ---
+id: "perfume-luxe-street"
 name: "Luxe Street"
 brand: "Maison Alhambra"
 price: 27990

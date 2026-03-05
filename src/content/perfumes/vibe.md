@@ -1,4 +1,5 @@
 ---
+id: "perfume-vibe"
 name: "Vibe"
 brand: "Maison Alhambra"
 price: 26990

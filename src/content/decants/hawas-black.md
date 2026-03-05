@@ -1,4 +1,5 @@
 ---
+id: "decant-hawas-black"
 name: "Hawas Black"
 brand: "Rasasi"
 price: 4990

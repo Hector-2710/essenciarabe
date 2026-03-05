@@ -1,4 +1,5 @@
 ---
+id: "perfume-liquid-brun"
 name: "Liquid Brun"
 brand: "French Avenue"
 price: 36990

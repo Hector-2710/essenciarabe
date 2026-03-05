@@ -1,4 +1,5 @@
 ---
+id: "decant-teriaq-intense"
 name: "Teriaq Intense"
 brand: "Lattafa"
 price: 3990

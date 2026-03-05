@@ -1,4 +1,5 @@
 ---
+id: "perfume-najdia-intense"
 name: "Najdia Intense"
 brand: "Lattafa"
 price: 23990

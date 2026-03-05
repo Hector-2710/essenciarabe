@@ -1,4 +1,5 @@
 ---
+id: "perfume-glacier-bold"
 name: "Glacier Bold"
 brand: "Maison Alhambra"
 price: 28990

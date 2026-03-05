@@ -1,4 +1,5 @@
 ---
+id: "decant-gold-edition"
 name: "Gold-Edition"
 brand: "Alharamain"
 price: 4500

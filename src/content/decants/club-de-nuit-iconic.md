@@ -1,4 +1,5 @@
 ---
+id: "decant-club-de-nuit-iconic"
 name: "Club de Nuit Iconic"
 brand: "Armaf"
 price: 3990

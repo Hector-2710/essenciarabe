@@ -1,4 +1,5 @@
 ---
+id: "decant-glacier-bold"
 name: "Glacier Bold"
 brand: "Maison Alhambra"
 price: 3990
