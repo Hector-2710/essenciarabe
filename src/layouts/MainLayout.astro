@@ -60,22 +60,28 @@ const { title } = Astro.props;
 
                 // Event handler para botones "añadir al carrito"
                 (window as any).cartClickHandler = function (e: Event) {
-                    const target = e.target as HTMLElement;
+                    const target = e.target as HTMLElement | null;
+                    const addToCartButton = target?.closest(
+                        ".add-to-cart-btn",
+                    ) as HTMLButtonElement | null;
 
                     if (
-                        target &&
-                        target.classList &&
-                        target.classList.contains("add-to-cart-btn") &&
-                        !(target as any).disabled
+                        addToCartButton &&
+                        addToCartButton.classList &&
+                        !addToCartButton.disabled
                     ) {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        const id = target.dataset.id || target.dataset.name;
-                        const name = target.dataset.name;
-                        const price = parseFloat(target.dataset.price || "0");
-                        const image = target.dataset.image;
-                        const brand = target.dataset.brand;
+                        const id =
+                            addToCartButton.dataset.id ||
+                            addToCartButton.dataset.name;
+                        const name = addToCartButton.dataset.name;
+                        const price = parseFloat(
+                            addToCartButton.dataset.price || "0",
+                        );
+                        const image = addToCartButton.dataset.image;
+                        const brand = addToCartButton.dataset.brand;
 
                         if (id && name && price > 0) {
                             const product = {
