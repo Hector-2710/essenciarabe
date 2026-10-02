@@ -1,67 +1,64 @@
 ---
-const { id, name, brand, price, image, description, available } =
-    Astro.props;
+const { id, name, brand, price, image, description } = Astro.props;
+const href = `/${id || name}`;
 ---
 
-<a
-    href={`/${id || name}`}
-    class="group flex h-full flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300 ease-out hover:shadow-xl shadow-sm border border-gray-100/50"
+<div
+    class="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300 ease-out hover:shadow-xl shadow-sm border border-gray-100/50"
 >
-    <div class="relative aspect-[3/3] overflow-hidden bg-gray-50">
-        <img
-            src={image}
-            alt={name}
-            loading="lazy"
-            transition:name={id}
-            class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-    </div>
-
-    <div class="flex grow flex-col p-6">
-        <div class="mb-4">
-            <p
-                class="mb-1 text-[10px] font-bold tracking-widest uppercase text-gray-400"
-            >
-                {brand}
-            </p>
-            <h3 class="text-xl font-semibold text-gray-900 leading-tight">
-                {name}
-            </h3>
+    <a href={href} class="flex grow flex-col focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+        <div class="relative aspect-[3/3] overflow-hidden bg-gray-50">
+            <img
+                src={image}
+                alt={name}
+                loading="lazy"
+                transition:name={id}
+                class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
         </div>
 
-        <p class="mb-6 line-clamp-3 text-sm leading-relaxed text-gray-500">
-            {description}
-        </p>
-
-        <div
-            class="mt-auto flex items-end justify-between border-t border-gray-100 pt-4"
-        >
-            <div class="flex flex-col">
-                {
-                    available ? (
-                        <span class="text-lg font-medium text-gray-900">
-                            ${price.toLocaleString("es-CL")}
-                        </span>
-                    ) : (
-                        <span class="text-base font-medium text-red-500">
-                            Agotado
-                        </span>
-                    )
-                }
+        <div class="flex grow flex-col p-6">
+            <div class="mb-4">
+                <p
+                    class="mb-1 text-[10px] font-bold tracking-widest uppercase text-gray-400"
+                >
+                    {brand}
+                </p>
+                <h3 class="text-xl font-semibold text-gray-900 leading-tight">
+                    {name}
+                </h3>
             </div>
-            <button
-                type="button"
-                class="add-to-cart-btn flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black text-lg font-medium leading-none text-white transition-all duration-300 hover:bg-gray-800 hover:shadow-lg active:scale-95 cursor-pointer"
-                data-id={id || name}
-                data-name={name}
-                data-price={price}
-                data-image={image}
-                data-brand={brand}
-                disabled={!available}
-                aria-label={`Agregar ${name} al carrito`}
+
+            <p class="mb-6 line-clamp-3 text-sm leading-relaxed text-gray-500">
+                {description}
+            </p>
+
+            <div
+                class="mt-auto flex items-end justify-between border-t border-gray-100 pt-4"
             >
-                +
-            </button>
+                <span class="text-lg font-medium text-gray-900">
+                    ${price.toLocaleString("es-CL")}
+                </span>
+            </div>
         </div>
-    </div>
-</a>
+    </a>
+
+    <!--
+        El botón vive fuera del <a>: anidar un elemento interactivo dentro de
+        otro es HTML inválido y hacía que Cmd/Ctrl+click sobre "+" agregara al
+        carrito en vez de abrir la ficha en una pestaña nueva. Está posicionado
+        sobre el footer de la tarjeta para conservar el diseño original.
+    -->
+    <button
+        type="button"
+        class="add-to-cart-btn absolute right-6 bottom-6 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black text-lg font-medium leading-none text-white transition-all duration-300 hover:bg-gray-800 hover:shadow-lg active:scale-95 cursor-pointer"
+        data-id={id || name}
+        data-name={name}
+        data-price={price}
+        data-image={image}
+        data-brand={brand}
+        aria-label={`Agregar ${name} al carrito`}
+    >
+        +
+    </button>
+</div>

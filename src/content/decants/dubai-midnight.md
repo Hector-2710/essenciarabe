@@ -5,5 +5,4 @@ brand: "Armaf"
 price: 3990
 image: "/images/dubai.jpg"
 description: "Una fragancia misteriosa y seductora con notas de incienso, cuero y té, inspirada en Midnight in Paris de Van Cleef & Arpels."
-available: true
 ---
