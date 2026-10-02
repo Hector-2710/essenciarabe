@@ -5,5 +5,4 @@ brand: "Lattafa"
 price: 2990
 image: "/images/your-touch.jpg"
 description: "Una fragancia intensa y cautivadora con notas dulces y amaderadas, inspirada en Emporio Armani Stronger With You Intensely."
-available: true
 ---
