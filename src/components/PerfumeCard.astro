@@ -1,6 +1,5 @@
 ---
-const { id, name, brand, price, image, description, available } =
-    Astro.props;
+const { id, name, brand, price, image, description } = Astro.props;
 ---
 
 <a
@@ -37,17 +36,9 @@ const { id, name, brand, price, image, description, available } =
             class="mt-auto flex items-end justify-between border-t border-gray-100 pt-4"
         >
             <div class="flex flex-col">
-                {
-                    available ? (
-                        <span class="text-lg font-medium text-gray-900">
-                            ${price.toLocaleString("es-CL")}
-                        </span>
-                    ) : (
-                        <span class="text-base font-medium text-red-500">
-                            Agotado
-                        </span>
-                    )
-                }
+                <span class="text-lg font-medium text-gray-900">
+                    ${price.toLocaleString("es-CL")}
+                </span>
             </div>
             <button
                 type="button"
@@ -57,7 +48,6 @@ const { id, name, brand, price, image, description, available } =
                 data-price={price}
                 data-image={image}
                 data-brand={brand}
-                disabled={!available}
                 aria-label={`Agregar ${name} al carrito`}
             >
                 +

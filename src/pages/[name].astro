@@ -37,7 +37,7 @@ export async function getStaticPaths() {
 }
 
 const { data, category } = Astro.props;
-const { id, name, brand, price, image, description, available } = data;
+const { id, name, brand, price, image, description } = data;
 ---
 
 <Layout title={`${name} | Essenciarabe`}>
@@ -106,17 +106,6 @@ const { id, name, brand, price, image, description, available } = data;
                         <span class="text-[2rem] font-semibold text-[#1d1d1f]"
                             >${price.toLocaleString()}</span
                         >
-                        {
-                            available ? (
-                                <span class="px-4 py-1.5 rounded-full text-[0.8rem] font-semibold bg-green-50 text-green-700 border border-green-100">
-                                    En stock
-                                </span>
-                            ) : (
-                                <span class="px-4 py-1.5 rounded-full text-[0.8rem] font-semibold bg-red-50 text-red-700 border border-red-100">
-                                    Agotado
-                                </span>
-                            )
-                        }
                     </div>
 
                     <div
@@ -133,15 +122,14 @@ const { id, name, brand, price, image, description, available } = data;
                     <div class="mb-12">
                         <button
                             id="add-to-cart-btn"
-                            class="add-to-cart-btn w-full p-5 rounded-2xl border-none bg-[#0071e3] text-white text-[1.1rem] font-semibold cursor-pointer transition-all duration-300 hover:bg-[#0077ed] hover:-translate-y-0.5 disabled:bg-[#86868b] disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={!available}
+                            class="add-to-cart-btn w-full p-5 rounded-2xl border-none bg-[#0071e3] text-white text-[1.1rem] font-semibold cursor-pointer transition-all duration-300 hover:bg-[#0077ed] hover:-translate-y-0.5"
                             data-id={id || name}
                             data-name={name}
                             data-brand={brand}
                             data-price={price}
                             data-image={image}
                         >
-                            {available ? "Agregar al carrito" : "Próximamente"}
+                            Agregar al carrito
                         </button>
                     </div>
                 </div>
