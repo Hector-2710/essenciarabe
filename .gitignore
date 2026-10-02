@@ -28,3 +28,10 @@ pnpm-debug.log*
 
 #agent
 .agent/
+AGENTS.md
+
+#opencode
+.opencode/
+
+#docs
+docs/
