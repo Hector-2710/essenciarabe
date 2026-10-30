@@ -55,8 +55,6 @@ export function toggleCart() {
 }
 
 export function addToCart(product: Omit<CartItem, 'quantity'>) {
-    console.log('Adding to cart:', product);
-
     const currentItems = cartItems.get();
     const existingItem = currentItems[product.id];
 
@@ -66,17 +64,13 @@ export function addToCart(product: Omit<CartItem, 'quantity'>) {
             ...existingItem,
             quantity: existingItem.quantity + 1,
         });
-        console.log('Updated quantity for:', product.name, 'New quantity:', existingItem.quantity + 1);
     } else {
         // Añadir nuevo producto con cantidad 1
         cartItems.setKey(product.id, {
             ...product,
             quantity: 1,
         });
-        console.log('Added new product:', product.name);
     }
-
-    openCart();
 }
 
 export function removeFromCart(id: string) {
