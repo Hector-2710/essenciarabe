@@ -63,7 +63,6 @@ catalog, not a badge: if we cannot stand behind it, we do not sell it.
 
 | Channel | |
 | --- | --- |
-| WhatsApp | [+56 9 6539 0562](https://wa.me/56965390562) |
 | Instagram | [@essenciarabe](https://instagram.com/essenciarabe) |
 | Email | [essenciarabe@gmail.com](mailto:essenciarabe@gmail.com) |
 
