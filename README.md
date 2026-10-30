@@ -8,6 +8,18 @@ committing to one.
 
 ---
 
+## Screenshots
+
+| Home | Estantería |
+| --- | --- |
+| ![Home](public/images/home.png) | ![Estantería](public/images/estanteria.png) |
+
+| Decants | Cart |
+| --- | --- |
+| ![Decants](public/images/decants.png) | ![Cart](public/images/cart.png) |
+
+---
+
 ## What a decant is
 
 A decant is the original perfume, transferred into a small 5 ml vial. It is not a
