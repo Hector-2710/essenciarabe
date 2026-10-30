@@ -1,35 +1,49 @@
 ---
+import { getCollection } from "astro:content";
+
+const decants = await getCollection("decants");
+const decantCount = decants.length;
 ---
 
-<div class="bg-white py-12">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Icon 1 -->
-            <div class="flex flex-col items-center text-center">
-                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-2xl">📦</span>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Entregas rapidas</h3>
-                <p class="text-gray-500 text-sm">Cordinacion previa o retiro en domicilio.</p>
-            </div>
+<footer class="border-t border-brass/25 bg-resin-soft">
+    <div
+        class="mx-auto grid max-w-[1440px] gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:gap-16"
+    >
+        <div>
+            <p class="display max-w-[18ch] text-[2rem] text-kraft sm:text-[3rem]">
+                No es una tienda automática
+            </p>
+            <p class="mt-4 max-w-[46ch] text-sm leading-relaxed text-smoke">
+                Escribes, te contestamos y coordinamos la entrega de los decants en 5 ml.
+            </p>
+            <a href="/contact" class="quiet-btn mt-6">Hablar con nosotros</a>
+        </div>
 
-            <!-- Icon 2 -->
-            <div class="flex flex-col items-center text-center">
-                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-2xl">🔒</span>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Perfumes 100% Originales</h3>
-                <p class="text-gray-500 text-sm">Todos los perfumes 100% originales garantizado.</p>
+        <div class="self-end">
+            <div class="ledger-row">
+                <span class="text-sm text-smoke">Decants en stock</span>
+                <span class="ledger-lead" aria-hidden="true"></span>
+                <span class="price text-[1.5rem] text-amber">{decantCount}</span>
             </div>
-
-            <!-- Icon 3 -->
-            <div class="flex flex-col items-center text-center">
-                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <span class="text-2xl">⭐</span>
-                </div>
-                <h3 class="font-semibold text-gray-900 mb-2">Catalogo Top</h3>
-                <p class="text-gray-500 text-sm">Solo los mejores perfumes del mercado arabe.</p>
+            <div class="ledger-row">
+                <span class="text-sm text-smoke">Originalidad</span>
+                <span class="ledger-lead" aria-hidden="true"></span>
+                <span class="price text-[1.5rem] text-amber">100%</span>
+            </div>
+            <div class="ledger-row">
+                <span class="text-sm text-smoke">Respuesta rápida</span>
+                <span class="ledger-lead" aria-hidden="true"></span>
+                <span class="text-sm font-semibold text-kraft">Durante el día</span>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="border-t border-brass/20">
+        <div
+            class="mx-auto flex max-w-[1440px] flex-col gap-2 px-4 py-5 text-[12px] text-brass sm:flex-row sm:items-center sm:justify-between sm:px-6"
+        >
+            <p>Essenciarabe · Perfumes árabes originales · Temuco, Chile</p>
+            <p>Precios en pesos chilenos. Entrega coordinada por WhatsApp.</p>
+        </div>
+    </div>
+</footer>
