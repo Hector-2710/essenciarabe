@@ -1,109 +1,118 @@
 ---
 import Layout from "../layouts/MainLayout.astro";
 import Navbar from "../components/Navbar.astro";
+
+const PHONE_DISPLAY = "+56 9 6539 0562";
+const PHONE_LINK = "56965390562";
 ---
 
-<Layout title="Contacto | Essenciarabe">
+<Layout
+    title="Contacto | Essenciarabe"
+    description="Escríbenos por WhatsApp, Instagram o correo. Respondemos desde Temuco y coordinamos la entrega de tu pedido de decants."
+>
     <Navbar />
 
-    <main class="min-h-screen bg-[#f5f5f7]">
-        <!-- Hero Section -->
-        <section class="max-w-4xl mx-auto px-6 pt-24 pb-12 text-center">
-            <h1 class="text-4xl md:text-6xl font-semibold text-[#1d1d1f] mb-6">
-                Conecta con Nosotros
+    <main id="contenido" class="mx-auto max-w-[1000px] px-4 pb-16 sm:px-6">
+        <header class="border-b border-brass/30 pb-6 pt-8 lg:pt-12">
+            <h1 class="display text-[clamp(2.6rem,7vw,5.4rem)] text-kraft">
+                Contacto
             </h1>
-            <p class="text-xl text-gray-500 max-w-2xl mx-auto font-light">
-                Estamos aquí para asesorarte y responder tus dudas. Elige tu forma preferida de
-                contacto y descubramos juntos tu próxima fragancia favorita.
+            <p class="mt-3 max-w-[48ch] text-sm leading-relaxed text-smoke">
+                Cuéntanos qué perfume buscas y te decimos si conviene probarlo primero en 5 ml.
             </p>
-        </section>
+        </header>
 
-        <!-- Contact Methods Grid -->
-        <section class="max-w-5xl mx-auto px-6 pb-24">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <!-- Instagram Card -->
+        <section class="mt-8" aria-labelledby="canales">
+            <h2 id="canales" class="label text-brass">Canales</h2>
+
+            <div class="mt-4 grid gap-3">
+                <a
+                    href={`https://wa.me/${PHONE_LINK}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="paper flex items-center justify-between gap-4 p-5 transition-transform duration-300 hover:-translate-y-0.5"
+                >
+                    <span>
+                        <span class="label text-ink-soft">WhatsApp</span>
+                        <span class="display mt-1 block text-[1.5rem] text-ink"
+                            >{PHONE_DISPLAY}</span
+                        >
+                        <span class="mt-1 block text-[12px] text-ink-soft"
+                            >Pedidos, stock y coordinación de entrega.</span
+                        >
+                    </span>
+                    <span class="quiet-btn quiet-btn--ink shrink-0"
+                        >Escribir</span
+                    >
+                </a>
+
                 <a
                     href="https://instagram.com/essenciarabe"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                    class="paper flex items-center justify-between gap-4 p-5 transition-transform duration-300 hover:-translate-y-0.5"
                 >
-                    <div
-                        class="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300"
-                    >
-                        📸
-                    </div>
-                    <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-2">
-                        Instagram
-                    </h3>
-                    <p class="text-gray-500 mb-6 font-light">
-                        Síguenos para novedades, consultas y contenido exclusivo.
-                    </p>
-                    <span
-                        class="text-blue-600 font-medium group-hover:underline"
-                        >@essenciarabe &rarr;</span
+                    <span>
+                        <span class="label text-ink-soft">Instagram</span>
+                        <span class="mt-1 block text-[1.25rem] font-semibold text-ink"
+                            >@essenciarabe</span
+                        >
+                        <span class="mt-1 block text-[12px] text-ink-soft"
+                            >Novedades y nuevas llegadas al mostrador.</span
+                        >
+                    </span>
+                    <span class="quiet-btn quiet-btn--ink shrink-0"
+                        >Seguir</span
                     >
                 </a>
 
-                <!-- WhatsApp Card -->
-                <a
-                    href="https://wa.me/56965390562"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-                >
-                    <div
-                        class="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300"
-                    >
-                        💬
-                    </div>
-                    <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-2">
-                        WhatsApp
-                    </h3>
-                    <p class="text-gray-500 mb-6 font-light">
-                        Atención personalizada y respuestas rápidas a tus dudas.
-                    </p>
-                    <span
-                        class="text-green-600 font-medium group-hover:underline"
-                        >Enviar mensaje &rarr;</span
-                    >
-                </a>
-
-                <!-- Email Card -->
                 <a
                     href="mailto:essenciarabe@gmail.com"
-                    class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                    class="paper flex items-center justify-between gap-4 p-5 transition-transform duration-300 hover:-translate-y-0.5"
                 >
-                    <div
-                        class="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300"
-                    >
-                        ✉️
-                    </div>
-                    <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-2">
-                        Email
-                    </h3>
-                    <p class="text-gray-500 mb-6 font-light">
-                        Para consultas, colaboraciones o pedidos especiales.
-                    </p>
-                    <span
-                        class="text-gray-800 font-medium group-hover:underline"
-                        >essenciarabe@gmail.com &rarr;</span
+                    <span>
+                        <span class="label text-ink-soft">Correo</span>
+                        <span class="mt-1 block break-all text-[1rem] font-semibold text-ink"
+                            >essenciarabe@gmail.com</span
+                        >
+                        <span class="mt-1 block text-[12px] text-ink-soft"
+                            >Consultas, colaboraciones y pedidos especiales.</span
+                        >
+                    </span>
+                    <span class="quiet-btn quiet-btn--ink shrink-0"
+                        >Escribir</span
                     >
                 </a>
             </div>
         </section>
 
-        <!-- FAQ Teaser or Additional Info -->
-        <section class="max-w-2xl mx-auto px-6 pb-24 text-center">
-            <h4
-                class="text-lg font-medium text-gray-400 uppercase tracking-widest mb-4"
-            >
-                Horario de Atención
-            </h4>
-            <p class="text-xl text-[#1d1d1f]">
-                Lunes a Viernes<br />
-                8:00 AM - 8:00 PM
+        <section class="mt-12 grid gap-8 border-t border-brass/25 pt-8 sm:grid-cols-2">
+            <div>
+                <h2 class="label text-brass">Horario</h2>
+                <p class="mt-3 text-sm leading-relaxed text-kraft">
+                    Lunes a viernes<br />
+                    <span class="text-smoke">8:00 a 20:00</span>
+                </p>
+            </div>
+            <div>
+                <h2 class="label text-brass">Dónde</h2>
+                <p class="mt-3 text-sm leading-relaxed text-kraft">
+                    Temuco, Chile<br />
+                    <span class="text-smoke"
+                        >Entrega coordinada o retiro.</span
+                    >
+                </p>
+            </div>
+        </section>
+
+        <section class="paper mt-12 p-6 sm:p-8">
+            <p class="display text-[2rem] text-ink">¿Armamos el pedido?</p>
+            <p class="mt-2 max-w-[46ch] text-sm leading-relaxed text-ink-soft">
+                Elige dos o tres decants, envía el carrito por WhatsApp y
+                coordinamos el resto. Si todavía no sabes qué oler, empieza por
+                los más vendidos de la estantería.
             </p>
+            <a href="/decants" class="stamp-btn mt-5">Ver los decants</a>
         </section>
     </main>
 </Layout>

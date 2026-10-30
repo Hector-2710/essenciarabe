@@ -4,30 +4,54 @@ import Navbar from "../components/Navbar.astro";
 import PerfumeCard from "../components/PerfumeCard.astro";
 
 import { getCollection } from "astro:content";
-const perfumes = await getCollection("decants");
+const decants = await getCollection("decants");
+
+const prices = decants.map((item) => item.data.price);
+const minPrice = Math.min(...prices);
+const maxPrice = Math.max(...prices);
+const clp = (value: number) => `$${value.toLocaleString("es-CL")}`;
 ---
 
-<Layout title="Decants | Essenciarabe">
+<Layout
+    title="Decants de 5 ml | Essenciarabe"
+    description={`${decants.length} decants de 5 ml de perfumes árabes originales, desde ${clp(minPrice)}. Prueba antes de comprar la botella.`}
+>
     <Navbar />
-    <main class="min-h-screen bg-[#f5f5f7]">
-        <section class="max-w-5xl mx-auto px-6 py-12">
-            <h2 class="text-4xl font-semibold text-[#1d1d1f] mb-6">
-                Nuestros Decants
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {
-                    perfumes.map((perfume) => (
-                        <PerfumeCard
-                            id={perfume.data.id}
-                            name={perfume.data.name}
-                            brand={perfume.data.brand}
-                            price={perfume.data.price}
-                            image={perfume.data.image}
-                            description={perfume.data.description}
-                        />
-                    ))
-                }
+
+    <main id="contenido" class="mx-auto max-w-[1440px] px-4 pb-16 sm:px-6">
+        <header class="border-b border-brass/30 pb-5 pt-8 lg:pt-12">
+            <h1 class="display text-[clamp(2.6rem,7vw,5.4rem)] text-kraft">
+                Decants
+            </h1>
+            <div
+                class="mt-4 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm text-smoke"
+            >
+                <p>
+                    <span class="font-semibold text-amber">{decants.length}</span>
+                    fragancias en 5 ml, de {clp(minPrice)} a {clp(maxPrice)}.
+                </p>
             </div>
-        </section>
+        </header>
+
+        {
+            decants.length === 0 ? (
+                <p class="py-16 text-smoke">
+                    No hay decants en stock en este momento.
+                </p>
+            ) : (
+                <div class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                    {decants.map((product) => (
+                        <PerfumeCard
+                            id={product.data.id}
+                            name={product.data.name}
+                            brand={product.data.brand}
+                            price={product.data.price}
+                            image={product.data.image}
+                            description={product.data.description}
+                        />
+                    ))}
+                </div>
+            )
+        }
     </main>
 </Layout>

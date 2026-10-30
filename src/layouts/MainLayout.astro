@@ -4,28 +4,42 @@ import { ClientRouter } from "astro:transitions";
 
 interface Props {
     title: string;
+    description?: string;
 }
 
-const { title } = Astro.props;
+const {
+    title,
+    description = "Decants de 5 ml y perfumes árabes originales en Chile. Prueba antes de comprar la botella y coordina tu pedido por WhatsApp.",
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/jpeg" href="/images/logo.jpg" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="theme-color" content="#1c120c" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Essenciarabe" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content="/images/crimson.jpg" />
+        <meta property="og:locale" content="es_CL" />
+        <meta name="twitter:card" content="summary_large_image" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap"
             rel="stylesheet"
         />
         <ClientRouter />
     </head>
     <body>
+        <a class="skip-link" href="#contenido">Saltar al contenido</a>
         <slot />
         <TrustSignals />
 
@@ -41,13 +55,10 @@ const { title } = Astro.props;
                 clearCart,
             } from "../store/cartStore";
 
-            // Variables globales para prevenir duplicados
-            let cartFunctionalityInitialized = false;
             let cartSubscriptions: any[] = [];
+            let lastFocused: HTMLElement | null = null;
+            let toastTimer: number | undefined;
 
-            // Escapa texto antes de interpolarlo en innerHTML. El carrito se
-            // renderiza como template string, así que name/brand/image/(id)
-            // pasarían por el parser de HTML sin sanitizar.
             function escapeHtml(value: unknown): string {
                 return String(value ?? "").replace(
                     /[&<>"'`]/g,
@@ -63,59 +74,46 @@ const { title } = Astro.props;
                 );
             }
 
-            function setupCartFunctionality() {
-                console.log("Setting up cart functionality...");
+            function money(value: number): string {
+                return `$${value.toLocaleString("es-CL")}`;
+            }
 
-                // Limpiar suscripciones anteriores
+            function setup() {
                 cartSubscriptions.forEach((unsubscribe) => unsubscribe());
                 cartSubscriptions = [];
 
-                // Remover listeners anteriores para evitar duplicados
                 const oldHandler = (window as any).cartClickHandler;
                 if (oldHandler) {
                     document.removeEventListener("click", oldHandler);
                 }
 
-                // Event handler para botones "añadir al carrito"
                 (window as any).cartClickHandler = function (e: Event) {
                     const target = e.target as HTMLElement | null;
-                    const addToCartButton = target?.closest(
+                    const button = target?.closest(
                         ".add-to-cart-btn",
                     ) as HTMLButtonElement | null;
 
-                    if (
-                        addToCartButton &&
-                        addToCartButton.classList &&
-                        !addToCartButton.disabled
-                    ) {
-                        // preventDefault basta: este listener corre en la fase
-                        // burbuja sobre document, antes de que se dispare el
-                        // default action del <a> que envuelve la tarjeta.
-                        // stopPropagation() aquí no cancelaba nada.
-                        e.preventDefault();
+                    if (!button || button.disabled) return;
 
-                        const id =
-                            addToCartButton.dataset.id ||
-                            addToCartButton.dataset.name;
-                        const name = addToCartButton.dataset.name;
-                        const price = parseFloat(
-                            addToCartButton.dataset.price || "0",
-                        );
-                        const image = addToCartButton.dataset.image;
-                        const brand = addToCartButton.dataset.brand;
+                    e.preventDefault();
 
-                        if (id && name && price > 0) {
-                            const product = {
-                                id,
-                                name,
-                                price,
-                                image: image || "",
-                                brand: brand || "",
-                            };
-                            console.log("Adding product to cart:", product);
-                            addToCart(product);
-                        }
-                    }
+                    const id = button.dataset.id || button.dataset.name;
+                    const name = button.dataset.name;
+                    const price = parseFloat(button.dataset.price || "0");
+                    const image = button.dataset.image;
+                    const brand = button.dataset.brand;
+
+                    if (!id || !name || !(price > 0)) return;
+
+                    addToCart({
+                        id,
+                        name,
+                        price,
+                        image: image || "",
+                        brand: brand || "",
+                    });
+
+                    stampAdded(button);
                 };
 
                 document.addEventListener(
@@ -123,30 +121,74 @@ const { title } = Astro.props;
                     (window as any).cartClickHandler,
                 );
 
-                // Setup del carrito
                 setupCart();
-
-                // Setup del Navbar
                 setupNavbar();
+                setupMarks();
+                setupTrail();
+            }
+
+            // El estado "añadido" es una marca momentánea, no un cambio de color.
+            function stampAdded(button: HTMLButtonElement) {
+                const plus = button.querySelector(".icon-plus");
+                const check = button.querySelector(".icon-check");
+                const rest = button.dataset.labelRest;
+
+                button.dataset.added = "true";
+                plus?.classList.add("hidden");
+                check?.classList.remove("hidden");
+                if (rest) button.textContent = "En el carrito";
+
+                window.setTimeout(() => {
+                    delete button.dataset.added;
+                    plus?.classList.remove("hidden");
+                    check?.classList.add("hidden");
+                    if (rest) button.textContent = rest;
+                }, 1400);
+
+                showToast();
+            }
+
+            function showToast() {
+                const toast = document.getElementById("stamp-toast");
+                const countEl = document.getElementById("stamp-toast-count");
+                if (!toast) return;
+
+                const total = Object.values(cartItems.get()).reduce(
+                    (acc, item) => acc + item.quantity,
+                    0,
+                );
+                if (countEl) countEl.textContent = String(total);
+
+                toast.classList.remove("hidden");
+                toast.classList.add("flex");
+
+                if (toastTimer) window.clearTimeout(toastTimer);
+                toastTimer = window.setTimeout(hideToast, 3200);
+            }
+
+            function hideToast() {
+                const toast = document.getElementById("stamp-toast");
+                if (!toast) return;
+                toast.classList.add("hidden");
+                toast.classList.remove("flex");
             }
 
             function setupNavbar() {
                 const btn = document.querySelector("#cart-btn");
-                const countEl = document.querySelector("#cart-count");
-                const mobileMenuBtn =
-                    document.querySelector("#mobile-menu-btn");
-                const mobileMenu = document.querySelector("#mobile-menu");
+                const mobileMenuBtn = document.querySelector("#mobile-menu-btn");
+                const mobileMenu = document.querySelector(
+                    "#mobile-menu",
+                ) as HTMLElement | null;
                 const menuIcon = document.querySelector("#menu-icon");
                 const closeIcon = document.querySelector("#close-icon");
                 const mobileItems = document.querySelectorAll(".mobile-li");
 
-                if (!btn) return; // Si no existe navbar, salir
+                if (!btn) return;
 
-                // Limpiar event listeners anteriores clonando el botón
+                // Clonar para descartar listeners de la página anterior.
                 const newBtn = btn.cloneNode(true) as HTMLElement;
                 btn.parentNode?.replaceChild(newBtn, btn);
 
-                // Limpiar mobile menu button también si existe
                 let newMobileBtn = mobileMenuBtn;
                 if (mobileMenuBtn) {
                     newMobileBtn = mobileMenuBtn.cloneNode(true) as HTMLElement;
@@ -156,20 +198,14 @@ const { title } = Astro.props;
                     );
                 }
 
-                // Actualizar referencias a los nuevos elementos
-                const cartBtn = newBtn;
-                const mobileBtnElement = newMobileBtn;
-
-                // Actualizar la referencia al contador después de clonar
-                const newCountEl = cartBtn.querySelector("#cart-count");
-
                 function closeMenu() {
                     mobileMenu?.classList.add(
                         "opacity-0",
                         "pointer-events-none",
                     );
                     document.body.style.overflow = "";
-                    setTimeout(() => {
+                    newMobileBtn?.setAttribute("aria-expanded", "false");
+                    window.setTimeout(() => {
                         mobileMenu?.classList.add("hidden");
                         mobileItems.forEach((item) => {
                             item.classList.add("translate-y-4", "opacity-0");
@@ -182,87 +218,78 @@ const { title } = Astro.props;
                 function openMenu() {
                     mobileMenu?.classList.remove("hidden");
                     document.body.style.overflow = "hidden";
-                    setTimeout(() => {
+                    newMobileBtn?.setAttribute("aria-expanded", "true");
+                    window.setTimeout(() => {
                         mobileMenu?.classList.remove(
                             "opacity-0",
                             "pointer-events-none",
                         );
                         mobileItems.forEach((item) => {
-                            item.classList.remove("translate-y-4", "opacity-0");
+                            item.classList.remove(
+                                "translate-y-4",
+                                "opacity-0",
+                            );
                         });
                     }, 10);
                     menuIcon?.classList.add("hidden");
                     closeIcon?.classList.remove("hidden");
                 }
 
-                // Cart toggle - usar el botón clonado
-                cartBtn.addEventListener("click", () => {
+                newBtn.addEventListener("click", () => {
                     toggleCart();
-                    // Close mobile menu if cart is opened
-                    if (
-                        mobileMenu &&
-                        !mobileMenu.classList.contains("hidden")
-                    ) {
+                    if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
                         closeMenu();
                     }
                 });
 
-                // Mobile menu toggle - usar el botón clonado
-                mobileBtnElement?.addEventListener("click", () => {
+                newMobileBtn?.addEventListener("click", () => {
                     const isOpen =
                         !mobileMenu?.classList.contains("hidden") &&
                         !mobileMenu?.classList.contains("opacity-0");
 
-                    if (isOpen) {
-                        closeMenu();
-                    } else {
-                        openMenu();
-                    }
+                    if (isOpen) closeMenu();
+                    else openMenu();
                 });
 
-                // Close menu when clicking a link
                 mobileItems.forEach((item) => {
-                    item.addEventListener("click", () => {
-                        closeMenu();
-                    });
+                    item.addEventListener("click", () => closeMenu());
                 });
 
-                // Suscripción al carrito para actualizar contador
-                const cartCountSub = cartItems.subscribe((items) => {
-                    const totalItems = Object.values(items).reduce(
+                const countEl = newBtn.querySelector("#cart-count");
+                const countSub = cartItems.subscribe((items) => {
+                    const total = Object.values(items).reduce(
                         (acc, item) => acc + item.quantity,
                         0,
                     );
-                    if (newCountEl) {
-                        newCountEl.textContent = totalItems.toString();
-                        // Only show badge if there are items
-                        if (totalItems > 0) {
-                            newCountEl.classList.remove("hidden");
-                        } else {
-                            newCountEl.classList.add("hidden");
-                        }
-                    }
+                    if (!countEl) return;
+                    countEl.textContent = total.toString();
+                    countEl.classList.toggle("hidden", total === 0);
                 });
 
-                // Agregar suscripción a la lista para limpiar después
-                cartSubscriptions.push(cartCountSub);
+                cartSubscriptions.push(countSub);
             }
 
             function setupCart() {
                 const drawer = document.getElementById("cart-drawer");
-                const overlay = document.getElementById("cart-drawer-overlay");
+                const overlay = document.getElementById(
+                    "cart-drawer-overlay",
+                );
                 const closeBtn = document.getElementById("close-cart");
                 const keepShoppingBtn =
                     document.getElementById("keep-shopping");
                 const cartList = document.getElementById("cart-list");
-                const emptyMessage =
-                    document.getElementById("empty-cart-message");
+                const emptyMessage = document.getElementById(
+                    "empty-cart-message",
+                );
                 const subtotalEl = document.getElementById("cart-subtotal");
-                const footer = document.getElementById("cart-footer");
-                const checkoutBtn = document.getElementById("checkout-btn");
-                const clearCartBtn = document.getElementById("clear-cart-btn");
+                const checkoutBtn = document.getElementById(
+                    "checkout-btn",
+                ) as HTMLButtonElement | null;
+                const clearCartBtn = document.getElementById(
+                    "clear-cart-btn",
+                ) as HTMLButtonElement | null;
 
-                if (!drawer) return; // Si no existe el cart, salir
+                if (!drawer) return;
 
                 const PHONE_NUMBER = "56965390562";
 
@@ -272,7 +299,7 @@ const { title } = Astro.props;
 
                     let total = 0;
                     let message =
-                        "¡Hola! Me gustaría realizar el siguiente pedido:\n\n";
+                        "¡Hola! Quiero encargar estos decants:\n\n";
 
                     items.forEach((item) => {
                         message += `- ${item.name} (${item.brand}) x${item.quantity}: $${(
@@ -282,64 +309,84 @@ const { title } = Astro.props;
                     });
 
                     message += `\n*TOTAL: $${total.toLocaleString("es-CL")}*`;
-                    const encodedMessage = encodeURIComponent(message);
-                    const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`;
-                    window.open(whatsappUrl, "_blank");
+                    message += "\n\n¿Coordinamos la entrega?";
+                    window.open(
+                        `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`,
+                        "_blank",
+                    );
                 }
 
-                // Event listeners del carrito
                 checkoutBtn?.addEventListener("click", handleCheckout);
-                clearCartBtn?.addEventListener("click", () => {
-                    clearCart();
-                });
+                clearCartBtn?.addEventListener("click", () => clearCart());
                 closeBtn?.addEventListener("click", () => closeCart());
                 overlay?.addEventListener("click", () => closeCart());
                 keepShoppingBtn?.addEventListener("click", () => closeCart());
+                document
+                    .getElementById("stamp-toast")
+                    ?.addEventListener("click", () => {
+                        hideToast();
+                        toggleCart();
+                    });
 
-                // Suscripción a la visibilidad del carrito
-                const cartOpenSub = isCartOpen.subscribe((open) => {
+                const openSub = isCartOpen.subscribe((open) => {
+                    drawer.classList.toggle("translate-y-full", !open);
+                    overlay?.classList.toggle("opacity-0", !open);
+                    overlay?.classList.toggle("pointer-events-none", !open);
+                    drawer.setAttribute("aria-hidden", String(!open));
+                    (drawer as HTMLElement).inert = !open;
+                    document.body.style.overflow = open ? "hidden" : "";
+
                     if (open) {
-                        drawer?.classList.remove("translate-x-full");
-                        overlay?.classList.remove(
-                            "opacity-0",
-                            "pointer-events-none",
+                        drawer.classList.remove("invisible");
+                        hideToast();
+                    } else {
+                        window.setTimeout(() => {
+                            if (!isCartOpen.get()) {
+                                drawer.classList.add("invisible");
+                            }
+                        }, 520);
+                    }
+
+                    const cartBtn = document.querySelector("#cart-btn");
+                    cartBtn?.setAttribute("aria-expanded", String(open));
+
+                    if (open) {
+                        lastFocused = document.activeElement as HTMLElement;
+                        window.requestAnimationFrame(() =>
+                            (closeBtn as HTMLElement | null)?.focus(),
                         );
                     } else {
-                        drawer?.classList.add("translate-x-full");
-                        overlay?.classList.add(
-                            "opacity-0",
-                            "pointer-events-none",
-                        );
+                        if (lastFocused && lastFocused !== document.body) {
+                            lastFocused.focus();
+                        } else {
+                            document
+                                .querySelector<HTMLElement>("#cart-btn")
+                                ?.focus();
+                        }
+                        lastFocused = null;
                     }
                 });
 
-                // Suscripción a los items del carrito - optimizada
                 let lastCartState: Record<string, any> = {};
-                const cartItemsSub = cartItems.subscribe((items) => {
+                const itemsSub = cartItems.subscribe((items) => {
                     const itemsArray = Object.values(items);
+                    const hasItems = itemsArray.length > 0;
 
-                    if (itemsArray.length === 0) {
-                        emptyMessage?.classList.remove("hidden");
-                        cartList?.classList.add("hidden");
-                        footer?.classList.add(
-                            "opacity-50",
-                            "pointer-events-none",
-                        );
-                        if (subtotalEl) subtotalEl.innerText = "$0";
+                    emptyMessage?.classList.toggle("hidden", hasItems);
+                    emptyMessage?.classList.toggle("flex", !hasItems);
+                    cartList?.classList.toggle("hidden", !hasItems);
+
+                    if (checkoutBtn) checkoutBtn.disabled = !hasItems;
+                    if (clearCartBtn) clearCartBtn.disabled = !hasItems;
+
+                    if (!hasItems) {
+                        if (subtotalEl) subtotalEl.textContent = "$0";
                         lastCartState = {};
                         return;
                     }
 
-                    emptyMessage?.classList.add("hidden");
-                    cartList?.classList.remove("hidden");
-                    footer?.classList.remove(
-                        "opacity-50",
-                        "pointer-events-none",
-                    );
-
                     let total = 0;
                     if (cartList) {
-                        // Verificar si necesitamos regenerar completamente o solo actualizar
                         const currentIds = new Set(
                             itemsArray.map((item) => item.id),
                         );
@@ -350,7 +397,6 @@ const { title } = Astro.props;
                             [...lastIds].some((id) => !currentIds.has(id));
 
                         if (needsFullRegen) {
-                            // Solo regenerar completamente cuando se agreguen/quiten productos
                             cartList.innerHTML = itemsArray
                                 .map((item) => {
                                     total += item.price * item.quantity;
@@ -359,27 +405,25 @@ const { title } = Astro.props;
                                     const safeName = escapeHtml(item.name);
                                     const safeBrand = escapeHtml(item.brand);
                                     return `
-                          <li class="flex py-2" data-item-id="${safeId}">
-                            <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                              <img src="${safeImage}" alt="${safeName}" class="h-full w-full object-cover object-center">
+                          <li class="flex gap-3 border-b border-ink/20 py-3" data-item-id="${safeId}">
+                            <div class="plate h-16 w-14 shrink-0 border border-ink/25" style="--field:#dcbb92">
+                              <img src="${safeImage}" alt="${safeName}">
                             </div>
-                            <div class="ml-4 flex flex-1 flex-col">
-                              <div>
-                                <div class="flex justify-between text-base font-medium text-gray-900">
-                                  <h3 class="line-clamp-1">${safeName}</h3>
-                                  <p class="ml-4 item-total-price">$${(item.price * item.quantity).toLocaleString("es-CL")}</p>
+                            <div class="flex min-w-0 flex-1 flex-col">
+                              <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                  <p class="label text-ink-soft">${safeBrand}</p>
+                                  <p class="display mt-1 truncate text-[1rem] text-ink">${safeName}</p>
                                 </div>
-                                <p class="mt-1 text-xs text-gray-500 uppercase tracking-wider font-bold">${safeBrand}</p>
+                                <p class="price item-total-price whitespace-nowrap text-[1rem] text-ink">${money(item.price * item.quantity)}</p>
                               </div>
-                              <div class="flex flex-1 items-end justify-between text-sm">
-                                <div class="flex items-center border border-gray-200 rounded-full px-3 py-1 space-x-3 bg-gray-50">
-                                  <button class="qty-btn dec w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200 text-gray-700 font-medium" data-id="${safeId}">-</button>
-                                  <span class="w-6 text-center font-medium text-gray-900 item-quantity">${item.quantity}</span>
-                                  <button class="qty-btn inc w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-200 text-gray-700 font-medium" data-id="${safeId}">+</button>
+                              <div class="mt-2 flex items-center justify-between">
+                                <div class="flex items-center border border-ink/30">
+                                  <button type="button" class="qty-btn dec flex h-7 w-7 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-kraft" data-id="${safeId}" aria-label="Quitar uno de ${safeName}">−</button>
+                                  <span class="w-8 text-center text-sm font-semibold text-ink item-quantity">${item.quantity}</span>
+                                  <button type="button" class="qty-btn inc flex h-7 w-7 items-center justify-center text-ink transition-colors hover:bg-ink hover:text-kraft" data-id="${safeId}" aria-label="Agregar uno de ${safeName}">+</button>
                                 </div>
-                                <button type="button" class="font-medium text-gray-600 hover:text-gray-900 remove-btn px-3 py-1 rounded-full hover:bg-gray-100 transition-all duration-200" data-id="${safeId}">
-                                  Quitar
-                                </button>
+                                <button type="button" class="remove-btn text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-soft underline underline-offset-4 hover:text-stamp-deep" data-id="${safeId}">Quitar</button>
                               </div>
                             </div>
                           </li>
@@ -387,10 +431,8 @@ const { title } = Astro.props;
                                 })
                                 .join("");
 
-                            // Re-attach event listeners solo cuando regeneremos
                             setupCartEventListeners(items);
                         } else {
-                            // Solo actualizar cantidades y precios
                             itemsArray.forEach((item) => {
                                 total += item.price * item.quantity;
                                 const lastItem = lastCartState[item.id];
@@ -399,7 +441,6 @@ const { title } = Astro.props;
                                     !lastItem ||
                                     lastItem.quantity !== item.quantity
                                 ) {
-                                    // Actualizar cantidad
                                     const quantityEl = cartList.querySelector(
                                         `li[data-item-id="${item.id}"] .item-quantity`,
                                     );
@@ -408,43 +449,35 @@ const { title } = Astro.props;
                                             item.quantity.toString();
                                     }
 
-                                    // Actualizar precio total del item
                                     const priceEl = cartList.querySelector(
                                         `li[data-item-id="${item.id}"] .item-total-price`,
                                     );
                                     if (priceEl) {
-                                        priceEl.textContent = `$${(item.price * item.quantity).toLocaleString("es-CL")}`;
+                                        priceEl.textContent = money(
+                                            item.price * item.quantity,
+                                        );
                                     }
                                 }
                             });
                         }
                     }
 
-                    // Actualizar subtotal
-                    if (subtotalEl) {
-                        subtotalEl.innerText = `$${total.toLocaleString("es-CL")}`;
-                    }
-
-                    // Guardar estado actual para la próxima comparación
+                    if (subtotalEl) subtotalEl.textContent = money(total);
                     lastCartState = { ...items };
                 });
 
                 function setupCartEventListeners(items: Record<string, any>) {
-                    // Event listeners para botones de remover
                     document.querySelectorAll(".remove-btn").forEach((btn) => {
                         btn.addEventListener("click", (e) => {
-                            const target = e.target as HTMLElement;
-                            if (!target) return;
+                            const target = e.currentTarget as HTMLElement;
                             const id = target.dataset.id;
                             if (id) removeFromCart(id);
                         });
                     });
 
-                    // Event listeners para botones de cantidad
                     document.querySelectorAll(".qty-btn").forEach((btn) => {
                         btn.addEventListener("click", (e) => {
-                            const target = e.target as HTMLElement;
-                            if (!target) return;
+                            const target = e.currentTarget as HTMLElement;
                             const id = target.dataset.id;
                             if (!id) return;
 
@@ -460,18 +493,142 @@ const { title } = Astro.props;
                     });
                 }
 
-                // Guardar suscripciones para limpiar después
-                cartSubscriptions.push(cartOpenSub, cartItemsSub);
+                cartSubscriptions.push(openSub, itemsSub);
             }
 
-            // Configuración inicial
-            setupCartFunctionality();
+            // Marca las fichas que ya están en el carrito (estado, no color).
+            function setupMarks() {
+                const sub = cartItems.subscribe((items) => {
+                    document
+                        .querySelectorAll<HTMLElement>(".add-to-cart-btn")
+                        .forEach((btn) => {
+                            const id = btn.dataset.id;
+                            if (!id) return;
+                            if (items[id]) btn.dataset.inCart = "true";
+                            else delete btn.dataset.inCart;
+                        });
+                });
+                cartSubscriptions.push(sub);
+            }
 
-            // Reconfigurar después de cada transición de página
-            document.addEventListener(
-                "astro:page-load",
-                setupCartFunctionality,
-            );
+            // Estela: los últimos decants vistos se desvanecen detrás del actual.
+            function setupTrail() {
+                const el = document.querySelector(
+                    "[data-trail]",
+                ) as HTMLElement | null;
+                if (!el) return;
+
+                const current = {
+                    id: el.dataset.current || "",
+                    name: el.dataset.name || "",
+                    brand: el.dataset.brand || "",
+                    price: el.dataset.price || "",
+                    image: el.dataset.image || "",
+                };
+                if (!current.id) return;
+
+                const KEY = "recent_decants";
+                let list: any[] = [];
+                try {
+                    list = JSON.parse(localStorage.getItem(KEY) || "[]");
+                } catch {
+                    list = [];
+                }
+                if (!Array.isArray(list)) list = [];
+
+                const others = list
+                    .filter(
+                        (item) =>
+                            item &&
+                            item.id &&
+                            item.id !== current.id &&
+                            item.name,
+                    )
+                    .slice(0, 3);
+
+                const wrap = el.querySelector("[data-trail-items]");
+                if (wrap) {
+                    if (others.length === 0) {
+                        el.hidden = true;
+                    } else {
+                        el.hidden = false;
+                        el.classList.remove("hidden");
+                        wrap.innerHTML = others
+                            .map((item, index) => {
+                                const opacity = [1, 0.78, 0.58][index] ?? 0.5;
+                                return `
+                        <a href="/${escapeHtml(item.id)}" class="trail-item group flex items-center gap-3" style="opacity:${opacity}">
+                          <div class="plate h-14 w-12 shrink-0 border border-brass/30" style="--field:#dcbb92">
+                            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+                          </div>
+                          <div class="min-w-0">
+                            <p class="label text-brass">${escapeHtml(item.brand)}</p>
+                            <p class="display mt-1 truncate text-[1rem] text-kraft">${escapeHtml(item.name)}</p>
+                            <p class="text-[12px] text-smoke">${escapeHtml(item.price)}</p>
+                          </div>
+                        </a>
+                      `;
+                            })
+                            .join("");
+                    }
+                }
+
+                const next = [current, ...others].slice(0, 4);
+                try {
+                    localStorage.setItem(KEY, JSON.stringify(next));
+                } catch {
+                    /* modo privado: la estela simplemente no persiste */
+                }
+            }
+
+            function setupKeyHandling() {
+                if ((window as any).cartKeyHandler) return;
+                (window as any).cartKeyHandler = true;
+
+                document.addEventListener("keydown", (e) => {
+                    if (!isCartOpen.get()) return;
+
+                    if (e.key === "Escape") {
+                        e.preventDefault();
+                        closeCart();
+                        return;
+                    }
+
+                    if (e.key !== "Tab") return;
+
+                    const drawer = document.getElementById("cart-drawer");
+                    if (!drawer) return;
+
+                    const focusable = Array.from(
+                        drawer.querySelectorAll<HTMLElement>(
+                            'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])',
+                        ),
+                    ).filter((node) => node.offsetParent !== null);
+                    if (focusable.length === 0) return;
+
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault();
+                        last.focus();
+                    } else if (
+                        !e.shiftKey &&
+                        document.activeElement === last
+                    ) {
+                        e.preventDefault();
+                        first.focus();
+                    }
+                });
+            }
+
+            setup();
+            setupKeyHandling();
+
+            document.addEventListener("astro:page-load", () => {
+                setup();
+                setupKeyHandling();
+            });
         </script>
     </body>
 </html>

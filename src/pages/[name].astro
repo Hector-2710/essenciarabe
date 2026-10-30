@@ -4,136 +4,118 @@ import Navbar from "../components/Navbar.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-    const perfumes = await getCollection("perfumes");
     const decants = await getCollection("decants");
 
-    const perfumePaths = perfumes.map((perfume) => ({
-        params: { name: perfume.data.name },
-        props: { data: perfume.data, category: "Perfume" },
-    }));
-
-    const decantPaths = decants.map((decant) => ({
-        params: { name: decant.data.name },
-        props: { data: decant.data, category: "Decant" },
-    }));
-
-    // Agregar rutas basadas en IDs
-    const perfumeIdPaths = perfumes.map((perfume) => ({
-        params: { name: perfume.data.id },
-        props: { data: perfume.data, category: "Perfume" },
-    }));
-
-    const decantIdPaths = decants.map((decant) => ({
-        params: { name: decant.data.id },
-        props: { data: decant.data, category: "Decant" },
-    }));
-
-    return [
-        ...perfumePaths,
-        ...decantPaths,
-        ...perfumeIdPaths,
-        ...decantIdPaths,
-    ];
+    return decants.flatMap((decant) => {
+        const props = { data: decant.data };
+        return [
+            { params: { name: decant.data.name }, props },
+            { params: { name: decant.data.id }, props },
+        ];
+    });
 }
 
-const { data, category } = Astro.props;
+const { data } = Astro.props;
 const { id, name, brand, price, image, description } = data;
+const key = id || name;
+const clp = (value: number) => `$${value.toLocaleString("es-CL")}`;
 ---
 
-<Layout title={`${name} | Essenciarabe`}>
+<Layout
+    title={`${name} · ${brand} | Essenciarabe`}
+    description={`${name} de ${brand} en decant de 5 ml por ${clp(price)}. 100% original. Coordinas por WhatsApp.`}
+>
     <Navbar />
 
-    <main class="bg-[#f5f5f7] text-[#1d1d1f] font-['Outfit']">
-        <section class="max-w-[1100px] mx-auto px-8 py-4 lg:py-8">
-            <!-- Back Button -->
-            <div class="mb-8">
-                <a
-                    href={category === "Perfume" ? "/perfumes" : "/decants"}
-                    class="inline-flex items-center gap-2 px-6 py-2.5 bg-white rounded-full text-black font-semibold shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-[#e5e5e7] hover:bg-[#f5f5f7] hover:shadow-[0_4px_15px_rgba(0,0,0,0.1)] transition-all duration-300 group"
+    <main id="contenido" class="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6">
+        <div class="pt-6">
+            <a href="/decants" class="quiet-btn">
+                <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    aria-hidden="true"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="transition-transform group-hover:-translate-x-1"
-                        ><path d="m15 18-6-6 6-6"></path></svg
-                    >
-                    Volver a {category === "Perfume" ? "Perfumes" : "Decants"}
-                </a>
-            </div>
+                    <path d="M10 3L5 8l5 5"></path>
+                </svg>
+                Decants
+            </a>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                <!-- Image Section -->
-                <div class="relative group">
+        <div class="mt-5 grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
+            <div class="paper stock-card self-start p-3 sm:p-4">
+                <div class="plate aspect-[3/4] w-full">
                     <img
                         src={image}
                         alt={name}
-                        transition:name={id}
-                        class="w-full h-full object-cover rounded-[2rem] z-10 shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                        transition:name={key}
+                        width="960"
+                        height="1280"
+                        fetchpriority="high"
                     />
-                    <div
-                        class="absolute inset-0 bg-[radial-gradient(circle,_rgba(212,175,55,0.08)_0%,_transparent_70%)] blur-[40px] z-0 pointer-events-none"
-                    >
-                    </div>
-                </div>
-
-                <!-- Info Section -->
-                <div
-                    class="p-8 bg-white rounded-[2rem] shadow-sm animate-fadeInUp flex flex-col justify-center"
-                >
-                    <div class="mb-8">
-                        <span
-                            class="text-[0.9rem] uppercase tracking-[0.2em] text-[#d4af37] font-semibold"
-                            >{brand}</span
-                        >
-                        <h1
-                            class="text-[3.5rem] font-bold mt-2 mb-0 leading-[1.1] text-[#1d1d1f] tracking-tight"
-                        >
-                            {name}
-                        </h1>
-                        <p class="text-[1.2rem] text-[#86868b] mt-2">
-                            {category}
-                        </p>
-                    </div>
-
-                    <div class="flex items-center gap-6 mb-8">
-                        <span class="text-[2rem] font-semibold text-[#1d1d1f]"
-                            >${price.toLocaleString("es-CL")}</span
-                        >
-                    </div>
-
-                    <div
-                        class="mb-10 text-[1.1rem] leading-relaxed text-[#424245]"
-                    >
-                        <p>
-                            {
-                                description ||
-                                    "Una fragancia excepcional seleccionada por Essenciarabe para aquellos que buscan distinción y elegancia."
-                            }
-                        </p>
-                    </div>
-
-                    <div class="mb-12">
-                        <button
-                            id="add-to-cart-btn"
-                            class="add-to-cart-btn w-full p-5 rounded-2xl border-none bg-[#0071e3] text-white text-[1.1rem] font-semibold cursor-pointer transition-all duration-300 hover:bg-[#0077ed] hover:-translate-y-0.5"
-                            data-id={id || name}
-                            data-name={name}
-                            data-brand={brand}
-                            data-price={price}
-                            data-image={image}
-                        >
-                            Agregar al carrito
-                        </button>
-                    </div>
                 </div>
             </div>
-        </section>
+
+            <div class="self-start lg:sticky lg:top-20">
+                <p class="label text-brass">{brand}</p>
+                <h1
+                    class="display mt-2 text-[clamp(2.4rem,6vw,4.4rem)] text-kraft"
+                >
+                    {name}
+                </h1>
+
+                <div class="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                    <span class="price text-[clamp(2.4rem,6vw,3.6rem)] text-kraft"
+                        >{clp(price)}</span
+                    >
+                    <span class="unit-chip border-brass/60 text-brass"
+                        >5 ml</span
+                    >
+                </div>
+
+                <p class="mt-5 max-w-[48ch] text-sm leading-relaxed text-smoke">
+                    {description}
+                </p>
+
+                <button
+                    type="button"
+                    class="add-to-cart-btn stamp-btn mt-7 w-full"
+                    data-id={key}
+                    data-name={name}
+                    data-price={price}
+                    data-image={image}
+                    data-brand={brand}
+                    data-label-rest="Agregar al carrito"
+                >
+                    Agregar al carrito
+                </button>
+
+                <p class="mt-3 text-[12px] leading-snug text-brass">
+                    5 ml originales. El pedido se envía por WhatsApp y coordinamos la entrega.
+                </p>
+
+            </div>
+        </div>
+
+        <!-- Estela: los últimos vistos se desvanecen -->
+        <div
+            class="mt-14 hidden border-t border-brass/25 pt-6"
+            data-trail
+            data-current={key}
+            data-name={name}
+            data-brand={brand}
+            data-price={clp(price)}
+            data-image={image}
+        >
+            <h2 class="label text-brass">Rastro</h2>
+            <div
+                class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3"
+                data-trail-items
+            >
+            </div>
+        </div>
     </main>
 </Layout>
