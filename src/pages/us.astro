@@ -1,91 +1,108 @@
 ---
 import Layout from "../layouts/MainLayout.astro";
 import Navbar from "../components/Navbar.astro";
+import { getCollection } from "astro:content";
+
+const decants = await getCollection("decants");
 ---
 
-<Layout title="Nosotros | Essenciarabe">
+<Layout
+    title="Nosotros | Essenciarabe"
+    description="Essenciarabe nace para oler sin gastar una botella: decants de 5 ml de perfumes árabes originales, despachados desde Temuco."
+>
     <Navbar />
 
-    <main class="min-h-screen bg-[#f5f5f7]">
-        <!-- Hero Section for About Us -->
-        <section class="max-w-4xl mx-auto px-6 py-16 text-center">
-            <h2 class="text-3xl md:text-5xl font-semibold text-[#1d1d1f] mb-8">
-                Nuestra Historia
-            </h2>
-            <p
-                class="text-xl md:text-2xl text-gray-600 leading-relaxed font-light mb-12"
-            >
-                <strong>Essenciarabe</strong> surge de la pasión por conseguir aromas
-                sin nesecidad de gastar mucho dinero, buscamos llevar aromas a toda
-                la comunidad que aprecia la belleza de los fragancias
-            </p>
-        </section>
+    <main id="contenido" class="mx-auto max-w-[1200px] px-4 pb-16 sm:px-6">
+        <header class="border-b border-brass/30 pb-6 pt-8 lg:pt-12">
+            <h1 class="display text-[clamp(2.6rem,7vw,5.4rem)] text-kraft">
+                Nosotros
+            </h1>
+        </header>
 
-        <!-- Values Section -->
-        <section
-            class="max-w-7xl mx-auto px-6 pb-24 grid grid-cols-1 md:grid-cols-3 gap-12"
-        >
-            <div
-                class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
-                <div class="text-4xl mb-4">✨</div>
-                <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-4">
-                    Autenticidad
-                </h3>
-                <p class="text-gray-500 leading-relaxed">
-                    Trabajamos directamente con las casas de perfumería más
-                    prestigiosas Arabes. Cada frasco es 100% original
-                    y garantizado.
-                </p>
-            </div>
-
-            <div
-                class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
-                <div class="text-4xl mb-4">💎</div>
-                <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-4">
-                    Exclusividad
-                </h3>
-                <p class="text-gray-500 leading-relaxed">
-                    Seleccionamos cuidadosamente fragancias que se han probado y
-                    han demostrado tener una calidad y rendimiento, entregando
-                    aromas únicos que definen tu presencia y dejan huella.
-                </p>
-            </div>
-
-            <div
-                class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
-                <div class="text-4xl mb-4">❤️</div>
-                <h3 class="text-2xl font-semibold text-[#1d1d1f] mb-4">
-                    Pasión
-                </h3>
-                <p class="text-gray-500 leading-relaxed">
-                    Creemos que un perfume es más que un olor sino una memoria y
-                    sentimiento, estamos aquí para ayudarte a encontrar tu firma
-                    olfativa perfecta.
-                </p>
-            </div>
-        </section>
-
-        <!-- Image Banner Placeholder (or decorative section) -->
-        <section
-            class="w-full h-64 md:h-96 bg-gray-200 relative overflow-hidden mb-24"
-        >
-            <div
-                class="absolute inset-0 flex items-center justify-center bg-black/40"
-            >
+        <section class="mt-10 grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+            <div>
                 <p
-                    class="text-white text-3xl md:text-5xl font-serif italic text-center px-4"
+                    class="display text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[0.95] text-kraft"
                 >
-                    "El perfume es la primera impresión de una persona"
+                    Essenciarabe nace de una molestia: oler un perfume árabe cuesta una botella entera.
+                </p>
+                <p class="mt-6 max-w-[54ch] text-sm leading-relaxed text-smoke">
+                    Los decants de 5 ml rinden varios usos
+                    , se guardan en el bolsillo y permiten probar varias fragancias por menos de lo que cuesta una sola botella.
                 </p>
             </div>
-            <img
-                src="https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&q=80&w=2000"
-                alt="Perfumes Arabes"
-                class="w-full h-full object-cover absolute inset-0 -z-10"
-            />
+
+            <div class="paper self-start p-6 sm:p-8">
+                <p class="display text-[2rem] text-ink">En el mostrador</p>
+                <div class="mt-4">
+                    <div class="ledger-row ledger-row--paper">
+                        <span class="text-sm text-ink-soft">Decants de 5 ml</span>
+                        <span class="ledger-lead" aria-hidden="true" />
+                        <span class="price text-[1.5rem] text-ink"
+                            >{decants.length}</span
+                        >
+                    </div>
+                    <div class="ledger-row ledger-row--paper">
+                        <span class="text-sm text-ink-soft">Originalidad</span>
+                        <span class="ledger-lead" aria-hidden="true" />
+                        <span class="price text-[1.5rem] text-ink">100%</span>
+                    </div>
+                    <div class="ledger-row ledger-row--paper">
+                        <span class="text-sm text-ink-soft">Desde</span>
+                        <span class="ledger-lead" aria-hidden="true" />
+                        <span class="text-sm font-semibold text-ink"
+                            >Temuco, Chile</span
+                        >
+                    </div>
+                </div>
+            </div>
         </section>
+
+        <section class="mt-14">
+            <h2 class="display text-[clamp(2rem,4.6vw,3.6rem)] text-kraft">
+                Tres cosas que no negociamos
+            </h2>
+            <ol class="mt-6 grid gap-x-10 gap-y-6 md:grid-cols-3">
+                <li class="border-t border-brass/30 pt-4">
+                    <span class="price block text-[2rem] text-amber">1</span>
+                    <p class="mt-2 font-semibold text-kraft">Originalidad</p>
+                    <p class="mt-1 max-w-[34ch] text-sm leading-relaxed text-smoke">
+                        Cada decant sale de un frasco original y sellado. No
+                        vendemos réplicas ni imitaciones, esta es la condición para estar en el catálogo.
+                    </p>
+                </li>
+                <li class="border-t border-brass/30 pt-4">
+                    <span class="price block text-[2rem] text-amber">2</span>
+                    <p class="mt-2 font-semibold text-kraft">Selección</p>
+                    <p class="mt-1 max-w-[34ch] text-sm leading-relaxed text-smoke">
+                        Elegimos fragancias que probamos y que rinden. Todo lo que se muestra en el catálogo está en stock.
+                    </p>
+                </li>
+                <li class="border-t border-brass/30 pt-4">
+                    <span class="price block text-[2rem] text-amber">3</span>
+                    <p class="mt-2 font-semibold text-kraft">Cercanía</p>
+                    <p class="mt-1 max-w-[34ch] text-sm leading-relaxed text-smoke">
+                        Una persona responde el WhatsApp y acuerda contigo el
+                        punto y el horario. Sin carrier ni plazos inventados.
+                    </p>
+                </li>
+            </ol>
+        </section>
+
+        <figure class="paper mt-14 p-8 sm:p-12">
+            <blockquote
+                class="display max-w-[26ch] text-[clamp(1.6rem,4vw,3rem)] text-ink"
+            >
+                «El perfume es la primera impresión de una persona.»
+            </blockquote>
+            <figcaption class="mt-4 text-[12px] uppercase tracking-[0.2em] text-ink-soft">
+                La razón por la que existe el decant
+            </figcaption>
+        </figure>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href="/decants" class="stamp-btn">Ver los decants</a>
+            <a href="/contact" class="quiet-btn">Hablar con nosotros</a>
+        </div>
     </main>
 </Layout>

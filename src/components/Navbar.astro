@@ -3,135 +3,140 @@ import Cart from "./Cart.astro";
 import "../styles/global.css";
 ---
 
-<nav
-    class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200"
->
-    <div class="max-w-7xl mx-auto px-6 h-11 flex items-center justify-between">
-        <!-- Logo -->
-        <div class="flex-1 flex justify-start">
-            <a
-                href="/"
-                class="flex items-center gap-3 text-lg font-semibold tracking-tight hover:opacity-80 transition-opacity whitespace-nowrap"
+<header class="rail fixed inset-x-0 top-0 z-50">
+    <div
+        class="relative z-[95] mx-auto flex h-14 max-w-[1440px] items-center gap-6 px-4 sm:px-6"
+    >
+        <a
+            href="/"
+            class="flex shrink-0 items-center gap-2.5"
+            aria-label="Essenciarabe, inicio"
+        >
+            <span class="display text-[16px] leading-none text-kraft"
+                >Essenciarabe</span
             >
-                <img 
-                    src="/images/perfume.png" 
-                    alt="Essenciarabe Logo" 
-                    class="w-5 h-5 object-cover"
-                />
-                Essenciarabe
-            </a>
-        </div>
+        </a>
 
-        <!-- Centered Links (Desktop) -->
-        <div class="hidden md:flex items-center gap-8">
-            <a class="nav-link" href="/">Inicio</a>
-            <a class="nav-link" href="/perfumes">Perfumes</a>
+        <nav class="ml-4 hidden items-center gap-6 md:flex" aria-label="Principal">
             <a class="nav-link" href="/decants">Decants</a>
             <a class="nav-link" href="/contact">Contacto</a>
             <a class="nav-link" href="/us">Nosotros</a>
-        </div>
+        </nav>
 
-        <!-- Actions -->
-        <div class="flex-1 flex justify-end">
-            <div id="nav-actions" class="flex items-center gap-3">
-                <button
-                    id="cart-btn"
-                    class="relative hover:opacity-70 transition-opacity ml-2"
+        <div class="ml-auto flex items-center gap-2">
+            <button
+                id="cart-btn"
+                type="button"
+                class="flex items-center gap-2 border border-brass/50 px-2.5 py-1.5 text-brass transition-colors hover:border-brass hover:text-kraft"
+                aria-label="Abrir el carrito"
+                aria-controls="cart-drawer"
+                aria-expanded="false"
+            >
+                <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
                 >
-                    <span class="text-xl">🛒</span>
-                    <span
-                        id="cart-count"
-                        class="absolute -top-1 -right-1 bg-apple-blue text-[10px] text-white w-4 h-4 rounded-full flex items-center justify-center font-bold hidden"
-                    >
-                        0
-                    </span>
-                </button>
+                    <path d="M1.5 2h2l2.4 9.5h9.6"></path>
+                    <path d="M3.9 5h12.2l-1.8 6.5H5.6"></path>
+                    <circle cx="7.5" cy="16" r="1.2"></circle>
+                    <circle cx="14.5" cy="16" r="1.2"></circle>
+                </svg>
+                <span class="label hidden text-[11px] sm:inline">Carrito</span>
+                <span
+                    id="cart-count"
+                    class="hidden min-w-5 bg-stamp px-1 py-0.5 text-center text-[11px] font-bold leading-none text-white"
+                    >0</span
+                >
+            </button>
 
-                <!-- Mobile Menu Button (Hamburger) - Moved to Right -->
-                <button
-                    id="mobile-menu-btn"
-                    class="flex md:hidden p-1 text-gray-600 hover:text-gray-900 focus:outline-none transition-colors z-[100]"
-                    aria-label="Toggle menu"
+            <button
+                id="mobile-menu-btn"
+                type="button"
+                class="flex items-center justify-center p-1.5 text-brass transition-colors hover:text-kraft md:hidden"
+                aria-label="Abrir el menú"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+            >
+                <svg
+                    id="menu-icon"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    aria-hidden="true"
                 >
-                    <svg
-                        id="menu-icon"
-                        class="w-6 h-6 transition-transform duration-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                    <svg
-                        id="close-icon"
-                        class="hidden w-6 h-6 transition-transform duration-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
+                    <path d="M3 6h18M3 12h18M3 18h18"></path>
+                </svg>
+                <svg
+                    id="close-icon"
+                    class="hidden"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    aria-hidden="true"
+                >
+                    <path d="M5 5l14 14M19 5L5 19"></path>
+                </svg>
+            </button>
         </div>
     </div>
 
-    <!-- Mobile Menu Drawer (Apple-style Full-screen White) -->
     <div
         id="mobile-menu"
-        class="fixed inset-0 h-screen w-screen bg-white z-[90] hidden md:hidden flex flex-col pt-24 px-10 transition-all duration-300 ease-in-out opacity-0 pointer-events-none"
+        class="fixed inset-0 z-[90] hidden h-screen w-screen flex-col bg-resin px-6 pt-20 opacity-0 transition-opacity duration-300 ease-out pointer-events-none md:hidden flex"
     >
-        <ul class="flex flex-col gap-8">
-            <li
-                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[100ms]"
-            >
-                <a class="mobile-nav-link text-3xl font-semibold" href="/">Inicio</a>
-            </li>
-            <li
-                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[150ms]"
-            >
+        <div class="brass-rule mb-2"></div>
+        <ul class="flex flex-col">
+            <li class="mobile-li translate-y-4 opacity-0 transition-all duration-400">
                 <a
-                    class="mobile-nav-link text-3xl font-semibold"
-                    href="/perfumes">Perfumes</a
+                    class="mobile-nav-link display block border-b border-brass/20 py-5 text-[2.5rem] text-kraft hover:text-amber"
+                    href="/">Inicio</a
                 >
             </li>
             <li
-                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[200ms]"
+                class="mobile-li translate-y-4 opacity-0 transition-all delay-[80ms] duration-400"
             >
                 <a
-                    class="mobile-nav-link text-3xl font-semibold"
+                    class="mobile-nav-link display block border-b border-brass/20 py-5 text-[2.5rem] text-kraft hover:text-amber"
                     href="/decants">Decants</a
                 >
             </li>
             <li
-                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[250ms]"
+                class="mobile-li translate-y-4 opacity-0 transition-all delay-[120ms] duration-400"
             >
                 <a
-                    class="mobile-nav-link text-3xl font-semibold"
+                    class="mobile-nav-link display block border-b border-brass/20 py-5 text-[2.5rem] text-kraft hover:text-amber"
                     href="/contact">Contacto</a
                 >
             </li>
             <li
-                class="mobile-li translate-y-4 opacity-0 transition-all duration-500 delay-[300ms]"
+                class="mobile-li translate-y-4 opacity-0 transition-all delay-[160ms] duration-400"
             >
                 <a
-                    class="mobile-nav-link text-3xl font-semibold"
+                    class="mobile-nav-link display block border-b border-brass/20 py-5 text-[2.5rem] text-kraft hover:text-amber"
                     href="/us">Nosotros</a
                 >
             </li>
         </ul>
+        <p class="mt-auto pb-8 text-sm leading-relaxed text-smoke">
+            Perfumes árabes originales. Decants de 5 ml despachados a granel,
+            coordinados por WhatsApp.
+        </p>
     </div>
-</nav>
+</header>
 
-<!-- Spacer to prevent content from going under the fixed navbar -->
-<div class="h-11"></div>
+<div class="h-14" aria-hidden="true"></div>
 
 <Cart />
